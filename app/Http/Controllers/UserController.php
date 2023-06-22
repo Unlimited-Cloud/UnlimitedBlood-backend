@@ -28,7 +28,7 @@ class UserController extends Controller
             //$user->loginStatus = true;
             //$user->save();
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'name' => $user['name'], 'bloodType' => $user['bloodType'], 'birthDate' => $user['birthDate'], 'email' => $user['email']]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred'], 500);
         }

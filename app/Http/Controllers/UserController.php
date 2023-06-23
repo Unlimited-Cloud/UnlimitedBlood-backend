@@ -53,4 +53,32 @@ class UserController extends Controller
             return response()->json(['error' => 'An error occurred'], 500);
         }
     }
+
+    public function editProfile(Request $request): JsonResponse {
+
+        $phoneNumber = $request->input('phoneNumber');
+        $name = $request->input('name');
+        $bloodType = $request->input('bloodType');
+        $birthDate = $request->input('birthDate');
+        $email = $request->input('email');
+
+        try {
+            $user = User::where('phoneNumber', $phoneNumber)->first();
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+            $user->name = $name;
+            $user->bloodType = $bloodType;
+            $user->birthDate = $birthDate;
+            $user->email = $email;
+            $user->save();
+
+            return response()->json(['success' => true, 'bloodType' => $bloodType]);
+
+        } catch (Exception) {
+            return response()->json(['error' => 'An error occurred'], 500);
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -19,8 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::put('/login', [UserController::class, 'login']);
+Route::put('/login', [DonorController::class, 'login']);
 
-Route::put('/logout', [UserController::class, 'logout']);
+Route::put('/logout', [DonorController::class, 'logout']);
 
-Route::post('/editProfile', [UserController::class, 'editProfile']);
+Route::post('/editProfile', [DonorController::class, 'editProfile']);

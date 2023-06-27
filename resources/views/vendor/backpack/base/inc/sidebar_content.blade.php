@@ -14,3 +14,15 @@
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('organizations') }}"><i class="nav-icon la la-group"></i>
         Organizations</a></li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('inventory') }}"><i class="nav-icon la la-boxes"></i>
+        Inventories</a></li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('camps') }}"><i class="nav-icon la la-campground"></i>
+        Camps</a></li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('camp-donors') }}"><i
+            class="nav-icon la la-user-plus"></i> Camp donors</a></li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('requests') }}"><i
+            class="nav-icon la la-hands-helping"></i> Requests</a></li>

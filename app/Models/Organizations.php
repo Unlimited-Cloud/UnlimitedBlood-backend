@@ -5,11 +5,13 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Organizations extends Model
 {
     use CrudTrait;
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /*
     |--------------------------------------------------------------------------
@@ -33,6 +35,9 @@ class Organizations extends Model
     ];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $casts = [
+        'password' => 'hashed',
+    ];
 
     /*
     |--------------------------------------------------------------------------

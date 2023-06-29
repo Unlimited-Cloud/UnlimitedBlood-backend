@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,21 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route:: get ('/', function () {
-    return view ('posts');
-});
-
-Route::get ('posts/{post}' , function($slug){
-    $path = __DIR__ . "/../resources/posts/{$slug}.html";
-
-    if (! file_exists($path)) {
-        return redirect('/');
-
-    }
-
-    $post = file_get_contents ($path);
-
-    return view('post', [
-       'post' => $post
-   ]);
+Route::group([
+    'prefix' => config('backpack.base.route_prefix', 'admin'),
+    'middleware' => array_merge(
+        (array)config('backpack.base.web_middleware', 'web'),
+        (array)config('backpack.base.middleware_key', 'admin')
+    ),
+    'namespace' => 'App\Http\Controllers\Admin',
+], function () {
+    Route::get('user', 'App\Http\Controllers\Admin\UserCrudController@index');
 });

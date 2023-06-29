@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Backpack\PermissionManager\app\Http\Controllers\UserCrudController as BaseUserCrudController;
+
+
 use App\Http\Requests\UserRequest;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -12,7 +14,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  * @package App\Http\Controllers\Admin
  * @property-read CrudPanel $crud
  */
-class UserCrudController extends CrudController
+class UserCrudController extends BaseUserCrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -25,11 +27,16 @@ class UserCrudController extends CrudController
      *
      * @return void
      */
+
     public function setup()
     {
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
         CRUD::setEntityNameStrings('user', 'users');
+
+        if (!backpack_user()->hasRole('admin')) {
+            redirect()->route('backpack.dashboard')->send();
+        }
     }
 
     /**
@@ -38,7 +45,7 @@ class UserCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    public function setupListOperation(): void
     {
         CRUD::column('name');
         CRUD::column('email');
@@ -57,7 +64,7 @@ class UserCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    public function setupCreateOperation(): \Illuminate\Http\RedirectResponse
     {
         CRUD::field('name');
         CRUD::field('email');
@@ -76,7 +83,7 @@ class UserCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
+    public function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
     }

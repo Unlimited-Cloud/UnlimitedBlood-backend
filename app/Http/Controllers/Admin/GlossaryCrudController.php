@@ -29,6 +29,10 @@ class GlossaryCrudController extends CrudController
         CRUD::setModel(\App\Models\Glossary::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/glossary');
         CRUD::setEntityNameStrings('phrase', 'phrases');
+
+        if (!backpack_user()->hasRole('Admin')) {
+            redirect()->route('backpack.dashboard')->send();
+        }
     }
 
     /**

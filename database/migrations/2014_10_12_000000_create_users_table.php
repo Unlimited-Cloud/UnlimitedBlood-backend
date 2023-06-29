@@ -10,19 +10,20 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        /* Schema::create('users', function (Blueprint $table) {
-             $table->id();
-             $table->string('name')->unique();
-             $table->string('email')->unique();
-             $table->string('password');
-             $table->rememberToken();
-             $table->timestamps();
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('phoneNumber')->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
 
-         });*/
+        });
 
-        /*Schema::create('donors', function (Blueprint $table) {
+        Schema::create('donors', function (Blueprint $table) {
             $table->string('phoneNumber')->primary();
             $table->string('email')->unique();
+            $table->string('user_id')->unique();
             $table->string('fname');
             $table->string('mname')->nullable();
             $table->string('lname');
@@ -36,11 +37,14 @@ return new class extends Migration {
             $table->boolean('loginStatus')->default(false);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
 
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber')->unique();
+            $table->string('user_id')->unique();
             $table->string('email')->unique();
             $table->string('name');
             $table->string('password');
@@ -50,6 +54,8 @@ return new class extends Migration {
             $table->boolean('loginStatus')->default(false);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
 
         Schema::create('donations', function (Blueprint $table) {
@@ -67,7 +73,7 @@ return new class extends Migration {
 
             $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
             $table->foreign('organizationId')->references('id')->on('organizations');
-        });*/
+        });
 
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
@@ -81,14 +87,14 @@ return new class extends Migration {
             $table->foreign('organizationId')->references('id')->on('organizations');
         });
 
-        /*Schema::create('glossary', function (Blueprint $table) {
+        Schema::create('glossary', function (Blueprint $table) {
             $table->id();
             $table->string('key_en')->unique();
             $table->string('ne')->nullable();
             $table->timestamps();
-        });*/
+        });
 
-        /*Schema::create('camps', function (Blueprint $table) {
+        Schema::create('camps', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('organizationId');
             $table->string('name');
@@ -101,7 +107,7 @@ return new class extends Migration {
 
             $table->foreign('organizationId')->references('id')->on('organizations');
 
-        });*/
+        });
 
         Schema::create('camp_donors', function (Blueprint $table) {
             $table->id();
@@ -114,7 +120,7 @@ return new class extends Migration {
             $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
         });
 
-        /*Schema::create('requests', function (Blueprint $table) {
+        Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber');
             $table->string('bloodType');
@@ -124,8 +130,10 @@ return new class extends Migration {
             $table->string('address');
             $table->unsignedBigInteger('fulfilled_by')->nullable();
 
+            $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
+            $table->foreign('fulfilled_by')->references('id')->on('organizations');
 
-        });*/
+        });
     }
 
     /**
@@ -133,7 +141,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        //Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
         //Schema::dropIfExists('donations');
         //Schema::dropIfExists('donors');
         //Schema::dropIfExists('inventory');

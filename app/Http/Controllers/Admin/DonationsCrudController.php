@@ -21,30 +21,36 @@ class DonationsCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\Donations::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/donations');
         CRUD::setEntityNameStrings('donations', 'donations');
+
+        if (backpack_user()->hasRole('donor')) {
+            $this->crud->denyAccess(['create', 'update', 'delete']);
+        }
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
         CRUD::column('phoneNumber');
         CRUD::column('bloodType');
         CRUD::column('donationType');
         CRUD::column('quantity');
         CRUD::column('donationDate');
-        CRUD::column('organizationId');
+        if (backpack_user()->hasRole('admin') || backpack_user()->hasRole('organization')) {
+            CRUD::column('organizationId');
+        }
         CRUD::column('upperBP');
         CRUD::column('lowerBP');
         CRUD::column('weight');
@@ -53,17 +59,17 @@ class DonationsCrudController extends CrudController
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
+         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
          */
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
         CRUD::field('phoneNumber');
         CRUD::field('bloodType');
@@ -79,17 +85,17 @@ class DonationsCrudController extends CrudController
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
+    protected function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
     }

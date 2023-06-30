@@ -29,6 +29,11 @@ class OrganizationsCrudController extends CrudController
         CRUD::setModel(\App\Models\Organizations::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/organizations');
         CRUD::setEntityNameStrings('organizations', 'organizations');
+
+        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('organization')) {
+            redirect()->route('backpack.dashboard')->send();
+            $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        }
     }
 
     /**

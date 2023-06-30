@@ -29,6 +29,11 @@ class InventoryCrudController extends CrudController
         CRUD::setModel(\App\Models\Inventory::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/inventory');
         CRUD::setEntityNameStrings('inventory', 'inventory');
+
+        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('organization')) {
+            redirect()->route('backpack.dashboard')->send();
+            $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        }
     }
 
     /**

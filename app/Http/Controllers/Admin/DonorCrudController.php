@@ -29,6 +29,11 @@ class DonorCrudController extends CrudController
         CRUD::setModel(\App\Models\Donor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/donor');
         CRUD::setEntityNameStrings('donor', 'donors');
+
+        if (!backpack_user()->hasRole('admin')) {
+            redirect()->route('backpack.dashboard')->send();
+            $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        }
     }
 
     /**

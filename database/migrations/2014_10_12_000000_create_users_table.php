@@ -11,9 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
+            $table->id()->unique();
+            $table->string('name');
             $table->string('phoneNumber')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -23,7 +24,7 @@ return new class extends Migration {
         Schema::create('donors', function (Blueprint $table) {
             $table->string('phoneNumber')->primary();
             $table->string('email')->unique();
-            $table->string('user_id')->unique();
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('fname');
             $table->string('mname')->nullable();
             $table->string('lname');
@@ -44,7 +45,7 @@ return new class extends Migration {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber')->unique();
-            $table->string('user_id')->unique();
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('email')->unique();
             $table->string('name');
             $table->string('password');
@@ -129,6 +130,7 @@ return new class extends Migration {
             $table->date('requestDate');
             $table->string('address');
             $table->unsignedBigInteger('fulfilled_by')->nullable();
+            $table->timestamps();
 
             $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
             $table->foreign('fulfilled_by')->references('id')->on('organizations');
@@ -142,14 +144,14 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('users');
-        //Schema::dropIfExists('donations');
-        //Schema::dropIfExists('donors');
-        //Schema::dropIfExists('inventory');
-        //Schema::dropIfExists('organizations');
-        //Schema::dropIfExists('camps');
-        //Schema::dropIfExists('camp_donors');
-        //Schema::dropIfExists('requests');
-        //Schema::dropIfExists('glossary');
+        Schema::dropIfExists('donations');
+        Schema::dropIfExists('donors');
+        Schema::dropIfExists('inventory');
+        Schema::dropIfExists('organizations');
+        Schema::dropIfExists('camps');
+        Schema::dropIfExists('camp_donors');
+        Schema::dropIfExists('requests');
+        Schema::dropIfExists('glossary');
 
     }
 };

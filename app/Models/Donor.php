@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -32,6 +33,7 @@ class Donor extends Authenticatable
         'gender',
         'birthDate',
         'profilePicture',
+        'user_id'
 
     ];
 
@@ -56,5 +58,10 @@ class Donor extends Authenticatable
     ];
 
     protected $primaryKey = 'phoneNumber';
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

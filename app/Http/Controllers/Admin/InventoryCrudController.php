@@ -24,13 +24,13 @@ class InventoryCrudController extends CrudController
      *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\Inventory::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/inventory');
         CRUD::setEntityNameStrings('inventory', 'inventory');
 
-        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('donor')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
         }
@@ -42,15 +42,16 @@ class InventoryCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
 
-        CRUD::column('id');
-        CRUD::column('organizationId');
-        CRUD::column('bloodType');
-        CRUD::column('donationType');
-        CRUD::column('quantity');
-        CRUD::column('price');
+        //CRUD::column('id');
+        CRUD::column('organizationId')->label('Organization ID');
+        CRUD::column('bloodType')->label('Blood Type');
+        CRUD::column('donationType')->label('Donation Type');
+        CRUD::column('quantity')->label('Quantity (ml)');
+        CRUD::column('price')->label('Price (Rs)');
+        CRUD::column('updated_at')->label('Last Updated');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -65,14 +66,35 @@ class InventoryCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
-        CRUD::field('id');
-        CRUD::field('organizationId');
-        CRUD::field('bloodType');
-        CRUD::field('donationType');
-        CRUD::field('quantity');
-        CRUD::field('price');
+        CRUD::addField([
+            'name' => 'organizationId',
+            'label' => 'Organization ID',
+            'attributes' => [
+                'readonly' => 'readonly'
+            ],
+            'default' => 1,
+        ]);
+        CRUD::addField([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'type' => 'enum',
+            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'],
+            'allows_null' => false,
+        ]);
+        CRUD::field('donationType')->label('Donation Type');
+        CRUD::addField([
+            'name' => 'quantity',
+            'label' => 'Quantity (ml)',
+            'type' => 'number',
+        ]);
+        CRUD::addField([
+            'name' => 'price',
+            'label' => 'Price (Rs)',
+            'type' => 'number',
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

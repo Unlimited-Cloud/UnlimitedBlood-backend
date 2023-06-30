@@ -29,6 +29,10 @@ class RequestsCrudController extends CrudController
         CRUD::setModel(\App\Models\Requests::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
+
+        if (!backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['delete', 'create',]);
+        }
     }
 
     /**
@@ -39,11 +43,11 @@ class RequestsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        CRUD::column('phoneNumber');
-        CRUD::column('bloodType');
-        CRUD::column('donationType');
-        CRUD::column('quantity');
-        CRUD::column('requestDate');
+        CRUD::column('phoneNumber')->label('Mobile Number');
+        CRUD::column('bloodType')->label('Blood Type');
+        CRUD::column('donationType')->label('Donation Type');
+        CRUD::column('quantity')->label('Quantity (ml)');
+        CRUD::column('requestDate')->label('Request Date');
         CRUD::column('address');
         CRUD::column('fulfilled_by');
 
@@ -62,11 +66,18 @@ class RequestsCrudController extends CrudController
      */
     protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber');
-        CRUD::field('bloodType');
-        CRUD::field('donationType');
-        CRUD::field('quantity');
-        CRUD::field('requestDate');
+        CRUD::field('phoneNumber')->label('Mobile Number');
+        CRUD::addField([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'type' => 'enum',
+            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'allows_null' => false,
+
+        ]);
+        CRUD::field('donationType')->label('Donation Type');
+        CRUD::field('quantity')->label('Quantity (ml)');
+        CRUD::field('requestDate')->label('Request Date');
         CRUD::field('address');
         if (backpack_user()->hasRole('admin')) {
             CRUD::field('fulfilled_by');
@@ -87,6 +98,37 @@ class RequestsCrudController extends CrudController
      */
     protected function setupUpdateOperation(): void
     {
-        $this->setupCreateOperation();
+        CRUD::field('phoneNumber')->attributes(["readonly" => "readonly"])->label('Mobile Number');
+        CRUD::addField([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'attributes' => [
+                'disabled' => 'disabled',
+            ],
+            'type' => 'enum',
+            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'allows_null' => false,
+
+        ]);
+        CRUD::field('donationType')->attributes(["readonly" => "readonly"])->label('Donation Type');
+        CRUD::field('quantity')->attributes(["readonly" => "readonly"])->label('Quantity (ml)');
+        CRUD::field('requestDate')->attributes(["readonly" => "readonly"])->label('Request Date');
+        CRUD::field('address')->attributes(["readonly" => "readonly"]);
+        CRUD::addField(
+            [
+                'name' => 'fulfilled_by',
+                'label' => 'Fulfilled?',
+                'type' => 'radio',
+                'model' => "App\Models\User",
+                'options' => [
+                    backpack_user()->organizations->id => 'Yes',
+                    null => 'No'
+
+                ],
+                'allows_null' => true,
+                'default' => null,
+            ]
+        );
+
     }
 }

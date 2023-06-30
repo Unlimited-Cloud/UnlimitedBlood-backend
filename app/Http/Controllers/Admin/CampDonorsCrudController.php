@@ -24,15 +24,18 @@ class CampDonorsCrudController extends CrudController
      *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\CampDonors::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/camp-donors');
         CRUD::setEntityNameStrings('camp donors', 'camp donors');
 
-        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('donor')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        }
+        if (backpack_user()->hasRole('organization') || backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['create', 'update', 'delete']);
         }
     }
 
@@ -42,10 +45,10 @@ class CampDonorsCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
-        CRUD::column('campId');
-        CRUD::column('phoneNumber');
+        CRUD::column('campId')->label('Camp ID');
+        CRUD::column('phoneNumber')->label('Mobile Number');
         CRUD::column('status');
         CRUD::column('created_at');
         CRUD::column('updated_at');
@@ -63,10 +66,10 @@ class CampDonorsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
         CRUD::field('campId');
-        CRUD::field('phoneNumber');
+        CRUD::field('phoneNumber')->type('number');
         CRUD::field('status');
 
         /**

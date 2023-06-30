@@ -1,38 +1,42 @@
 {{-- This file is used to store sidebar items, inside the Backpack admin panel --}}
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i
             class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
-@if(backpack_user()->hasRole('admin'))
+@if(backpack_user()->can('donor-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('donor') }}"><i class="nav-icon la la-heartbeat"></i>
             Donors</a></li>
+@endif
+@if(backpack_user()->can('glossary-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('glossary') }}"><i class="nav-icon la la-book"></i>
             Glossary</a></li>
 @endif
-@if(backpack_user()->hasRole('organization') || backpack_user()->hasRole('admin'))
-
+@if(backpack_user()->can('organizations-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('organizations') }}"><i
                 class="nav-icon la la-group"></i>
             Organizations</a></li>
-
+@endif
+@if(backpack_user()->can('inventory-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('inventory') }}"><i
                 class="nav-icon la la-boxes"></i>
             Inventories</a></li>
 @endif
-@if(backpack_user()->hasRole('organization') || backpack_user()->hasRole('admin') || backpack_user()->hasRole('donor'))
+@if(backpack_user()->can('donations-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('donations') }}"><i
                 class="nav-icon la la-hand-holding-heart"></i> Donations</a></li>
-
+@endif
+@if(backpack_user()->can('requests-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('requests') }}"><i
                 class="nav-icon la la-hands-helping"></i> Requests</a></li>
-
+@endif
+@if(backpack_user()->can('camps-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('camps') }}"><i
                 class="nav-icon la la-campground"></i>
             Camps</a></li>
 @endif
-@if(backpack_user()->hasRole('organization') || backpack_user()->hasRole('admin'))
+@if(backpack_user()->can('camp-donors-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('camp-donors') }}"><i
                 class="nav-icon la la-user-plus"></i> Camp donors</a></li>
 @endif
-@if(backpack_user()->hasRole('admin'))
+@if(backpack_user()->can('user-access'))
     <li class="nav-item nav-dropdown">
 
         <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Authentication</a>

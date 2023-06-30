@@ -24,17 +24,18 @@ class OrganizationsCrudController extends CrudController
      *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\Organizations::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/organizations');
         CRUD::setEntityNameStrings('organizations', 'organizations');
 
-        if (!backpack_user()->hasRole('admin') || !backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('donor') || backpack_user()->hasRole('organization')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
         }
     }
+
 
     /**
      * Define what happens when the List operation is loaded.
@@ -42,14 +43,16 @@ class OrganizationsCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
-        CRUD::column('id');
-        CRUD::column('phoneNumber');
-        CRUD::column('email');
+        CRUD::column('id')->label('ID')->type('number');
+        CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
+        CRUD::column('email')->type('email');
         CRUD::column('name');
-        CRUD::column('password');
+        //CRUD::column('password');
         CRUD::column('address');
+        CRUD::column('website')->type('url');
+        CRUD::column('loginStatus')->type('boolean');
         CRUD::column('logo');
 
         /**
@@ -65,13 +68,14 @@ class OrganizationsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber');
-        CRUD::field('email');
+        CRUD::field('phoneNumber')->type('number');
+        CRUD::field('email')->type('email');
         CRUD::field('name');
         CRUD::field('password');
         CRUD::field('address');
+        CRUD::field('user_id')->label('User ID')->type('number');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -86,7 +90,7 @@ class OrganizationsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
+    protected function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
     }

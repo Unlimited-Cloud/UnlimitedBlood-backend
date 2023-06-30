@@ -30,7 +30,8 @@ class Organizations extends Model
         'name',
         'password',
         'address',
-        'logo'
+        'logo',
+        'user_id'
 
     ];
     // protected $hidden = [];
@@ -44,6 +45,11 @@ class Organizations extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /*
     |--------------------------------------------------------------------------

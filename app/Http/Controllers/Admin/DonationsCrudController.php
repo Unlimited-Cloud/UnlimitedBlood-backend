@@ -43,16 +43,16 @@ class DonationsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        CRUD::column('phoneNumber');
-        CRUD::column('bloodType');
-        CRUD::column('donationType');
-        CRUD::column('quantity');
-        CRUD::column('donationDate');
-        if (backpack_user()->hasRole('admin') || backpack_user()->hasRole('organization')) {
-            CRUD::column('organizationId');
+        CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
+        CRUD::column('bloodType')->label('Blood Type');
+        CRUD::column('donationType')->label('Donation Type');
+        CRUD::column('quantity')->label('Quantity (ml)');
+        CRUD::column('donationDate')->label('Date');
+        if (backpack_user()->hasRole('admin')) {
+            CRUD::column('organizationId')->label('Organization ID');
         }
-        CRUD::column('upperBP');
-        CRUD::column('lowerBP');
+        CRUD::column('upperBP')->label('Upper BP');
+        CRUD::column('lowerBP')->label('Lower BP');
         CRUD::column('weight');
         CRUD::column('notes');
 
@@ -71,15 +71,31 @@ class DonationsCrudController extends CrudController
      */
     protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber');
-        CRUD::field('bloodType');
+        CRUD::addField([
+            'name' => 'organizationId',
+            'label' => 'Organization ID',
+            'attributes' => [
+                'readonly' => 'readonly'
+            ],
+            'default' => backpack_user()->organizations->id,
+        ]);
+        CRUD::field('phoneNumber')->label('Mobile Number')->type('number');
+        CRUD::addField([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'type' => 'enum',
+            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        ]);
         CRUD::field('donationType');
-        CRUD::field('quantity');
-        CRUD::field('donationDate');
-        CRUD::field('organizationId');
-        CRUD::field('upperBP');
-        CRUD::field('lowerBP');
-        CRUD::field('weight');
+        CRUD::addField([
+            'name' => 'quantity',
+            'label' => 'Quantity (ml)',
+            'type' => 'number',
+        ]);
+        CRUD::field('donationDate')->label('Donation Date')->type('date');
+        CRUD::field('upperBP')->label('Upper Blood Pressure')->type('number');
+        CRUD::field('lowerBP')->label('Upper Blood Pressure')->type('number');
+        CRUD::field('weight')->type('number');
         CRUD::field('notes');
 
         /**

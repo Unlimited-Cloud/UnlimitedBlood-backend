@@ -24,7 +24,7 @@ class DonorCrudController extends CrudController
      *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\Donor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/donor');
@@ -42,19 +42,22 @@ class DonorCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
-        CRUD::column('phoneNumber');
-        CRUD::column('email');
+        CRUD::column('phoneNumber')->type('tel');
+        CRUD::column('email')->type('email');
         CRUD::column('fname');
-        CRUD::column('mname');
+        //CRUD::column('mname');
         CRUD::column('lname');
-        CRUD::column('password');
-        CRUD::column('bloodType');
+        CRUD::addColumn([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'type' => 'enum',
+            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'N/A']]);
         CRUD::column('address');
         CRUD::column('gender');
         CRUD::column('birthDate');
-        CRUD::column('profilePicture');
+        CRUD::column('user_id');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -69,18 +72,27 @@ class DonorCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber');
-        CRUD::field('email');
-        CRUD::field('fname');
-        CRUD::field('mname');
-        CRUD::field('lname');
+        CRUD::field('phoneNumber')->type('number');
+        CRUD::field('email')->type('email');
+        CRUD::field('fname')->type('text');
+        CRUD::field('mname')->type('text');;
+        CRUD::field('lname')->type('text');;
         CRUD::field('password');
-        CRUD::field('bloodType');
+        CRUD::addField([
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
+            'type' => 'enum',
+            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'N/A']]);
         CRUD::field('address');
-        CRUD::field('gender');
-        CRUD::field('birthDate');
+        CRUD::addField([
+            'name' => 'gender',
+            'label' => 'Gender',
+            'type' => 'enum',
+            'options' => ['Male', 'Female', 'Other']]);
+        CRUD::field('birthDate')->type('date');
+        CRUD::field('user_id');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -95,7 +107,7 @@ class DonorCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
+    protected function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
     }

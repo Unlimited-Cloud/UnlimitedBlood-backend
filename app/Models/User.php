@@ -47,5 +47,15 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function donors(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Donor::class);
+    }
+
+    public function organizations(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Organizations::class);
+    }
+
 
 }

@@ -24,7 +24,7 @@ class CampsCrudController extends CrudController
      *
      * @return void
      */
-    public function setup()
+    public function setup(): void
     {
         CRUD::setModel(\App\Models\Camps::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/camps');
@@ -42,15 +42,15 @@ class CampsCrudController extends CrudController
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
-    protected function setupListOperation()
+    protected function setupListOperation(): void
     {
 
         CRUD::column('name');
         CRUD::column('address');
-        CRUD::column('startDate');
-        CRUD::column('endDate');
+        CRUD::column('startDate')->label('Start Date');
+        CRUD::column('endDate')->label('End Date');
         CRUD::column('attendees');
-        CRUD::column('pictures');
+        CRUD::column('pictures')->type('image');
         if (backpack_user()->hasRole('admin')) {
             CRUD::column('organizationId');
             CRUD::column('created_at');
@@ -71,15 +71,23 @@ class CampsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation(): void
     {
-        CRUD::field('organizationId');
+        CRUD::addField([
+            'name' => 'organizationId',
+            'label' => 'Organization ID',
+            'attributes' => [
+                'readonly' => 'readonly',
+            ],
+            'default' => backpack_user()->organizations->id,
+
+        ]);
         CRUD::field('name');
         CRUD::field('address');
-        CRUD::field('startDate');
-        CRUD::field('endDate');
-        CRUD::field('attendees');
-        CRUD::field('pictures');
+        CRUD::field('startDate')->type('date');
+        CRUD::field('endDate')->type('date');
+        //CRUD::field('attendees');
+        CRUD::field('pictures')->type('upload');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -94,7 +102,7 @@ class CampsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-    protected function setupUpdateOperation()
+    protected function setupUpdateOperation(): void
     {
         $this->setupCreateOperation();
     }

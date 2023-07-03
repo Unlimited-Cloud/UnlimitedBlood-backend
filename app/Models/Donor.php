@@ -58,6 +58,7 @@ class Donor extends Authenticatable
     ];
 
     protected $primaryKey = 'phoneNumber';
+    public $incrementing = false; // To keep leading zeros
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

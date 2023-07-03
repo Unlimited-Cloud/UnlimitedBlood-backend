@@ -61,9 +61,9 @@ class UserCrudController extends BaseUserCrudController
                 'type' => 'text',
             ],
             [
-                'name' => 'email',
-                'label' => trans('backpack::permissionmanager.email'),
-                'type' => 'email',
+                'name' => 'phoneNumber',
+                'label' => 'Mobile Number',
+                'type' => 'tel',
             ],
             [ // n-n relationship (with pivot table)
                 'label' => trans('backpack::permissionmanager.roles'), // Table column heading
@@ -99,7 +99,7 @@ class UserCrudController extends BaseUserCrudController
     public function setupCreateOperation(): void
     {
         CRUD::field('name');
-        CRUD::field('email');
+        CRUD::field('phoneNumber');
         $this->addUserFields();
         $this->crud->setValidation(StoreRequest::class);
 
@@ -180,9 +180,9 @@ class UserCrudController extends BaseUserCrudController
                 'type' => 'text',
             ],
             [
-                'name' => 'email',
-                'label' => trans('backpack::permissionmanager.email'),
-                'type' => 'email',
+                'name' => 'phoneNumber',
+                'label' => 'Mobile Number',
+                'type' => 'number',
             ],
             [
                 'name' => 'password',

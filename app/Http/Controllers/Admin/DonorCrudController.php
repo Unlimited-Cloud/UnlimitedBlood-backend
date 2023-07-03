@@ -44,7 +44,7 @@ class DonorCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        CRUD::column('phoneNumber')->type('tel');
+        CRUD::column('phoneNumber')->type('text');
         CRUD::column('email')->type('email');
         CRUD::column('fname');
         //CRUD::column('mname');
@@ -53,7 +53,8 @@ class DonorCrudController extends CrudController
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'N/A']]);
+            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-']]);
         CRUD::column('address');
         CRUD::column('gender');
         CRUD::column('birthDate');
@@ -84,13 +85,14 @@ class DonorCrudController extends CrudController
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'N/A']]);
+            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-']]);
         CRUD::field('address');
         CRUD::addField([
             'name' => 'gender',
             'label' => 'Gender',
             'type' => 'enum',
-            'options' => ['Male', 'Female', 'Other']]);
+            'options' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']]);
         CRUD::field('birthDate')->type('date');
         CRUD::field('user_id');
 

@@ -34,6 +34,9 @@ class CampsCrudController extends CrudController
 
             $this->crud->denyAccess(['create', 'update', 'delete']);
         }
+        if (backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['create', 'update', 'delete']);
+        }
     }
 
     /**
@@ -87,7 +90,9 @@ class CampsCrudController extends CrudController
         CRUD::field('startDate')->type('date');
         CRUD::field('endDate')->type('date');
         //CRUD::field('attendees');
-        CRUD::field('pictures')->type('upload');
+        // to upload multiple images and store them
+        CRUD::field('pictures')->type('upload')->upload(true);
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -104,6 +109,21 @@ class CampsCrudController extends CrudController
      */
     protected function setupUpdateOperation(): void
     {
-        $this->setupCreateOperation();
+        CRUD::addField([
+            'name' => 'organizationId',
+            'label' => 'Organization ID',
+            'attributes' => [
+                'readonly' => 'readonly',
+            ],
+            'default' => backpack_user()->organizations->id,
+
+        ]);
+        CRUD::field('name');
+        CRUD::field('address');
+        # get startDate that's already in the database
+        CRUD::field('startDate')->type('date');
+        CRUD::field('endDate')->type('date');
+        //CRUD::field('attendees');
+        CRUD::field('pictures')->type('upload')->withFiles();
     }
 }

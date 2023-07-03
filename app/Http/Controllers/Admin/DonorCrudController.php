@@ -30,7 +30,7 @@ class DonorCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/donor');
         CRUD::setEntityNameStrings('donor', 'donors');
 
-        if (!backpack_user()->hasRole('admin')) {
+        if (backpack_user()->hasRole('organization')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
         }
@@ -44,7 +44,19 @@ class DonorCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        CRUD::column('phoneNumber')->type('text');
+        if (backpack_user()->hasRole('donor')) {
+            $user_phone = backpack_user()->phoneNumber;
+            $this->crud->addClause('where', 'phoneNumber', '=', $user_phone);
+        }
+
+        CRUD::addColumn([
+            'name' => 'phoneNumber',
+            'label' => 'Mobile Number',
+            'type' => 'tel',
+            /*'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhere('phoneNumber', 'LIKE', '%' . $searchTerm . '%');
+            }*/
+        ]);
         CRUD::column('email')->type('email');
         CRUD::column('fname');
         //CRUD::column('mname');

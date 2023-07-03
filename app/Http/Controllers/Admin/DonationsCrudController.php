@@ -43,6 +43,10 @@ class DonationsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
+        if (backpack_user()->hasRole('organization')) {
+            $user_organization_id = backpack_user()->organizations->id;
+            $this->crud->addClause('where', 'organizationId', '=', $user_organization_id);
+        }
         CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');

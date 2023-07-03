@@ -36,6 +36,7 @@ class Donations extends Model
     ];
 
     protected $primaryKey = 'phoneNumber';
+    public $incrementing = false;
     // protected $hidden = [];
     // protected $dates = [];
 

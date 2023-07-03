@@ -47,6 +47,10 @@ class CampsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
+        if (backpack_user()->hasRole('organization')) {
+            $user_organization_id = backpack_user()->organizations->id;
+            $this->crud->addClause('where', 'organizationId', '=', $user_organization_id);
+        }
 
         CRUD::column('name');
         CRUD::column('address');
@@ -54,8 +58,9 @@ class CampsCrudController extends CrudController
         CRUD::column('endDate')->label('End Date');
         CRUD::column('attendees');
         CRUD::column('pictures')->type('image');
+        CRUD::column('organizationId');
         if (backpack_user()->hasRole('admin')) {
-            CRUD::column('organizationId');
+
             CRUD::column('created_at');
             CRUD::column('updated_at');
         }
@@ -91,7 +96,7 @@ class CampsCrudController extends CrudController
         CRUD::field('endDate')->type('date');
         //CRUD::field('attendees');
         // to upload multiple images and store them
-        CRUD::field('pictures')->type('upload')->upload(true);
+        CRUD::field('pictures')->type('upload_multiple')->withFiles();
 
 
         /**
@@ -124,6 +129,6 @@ class CampsCrudController extends CrudController
         CRUD::field('startDate')->type('date');
         CRUD::field('endDate')->type('date');
         //CRUD::field('attendees');
-        CRUD::field('pictures')->type('upload')->withFiles();
+        CRUD::field('pictures')->type('upload_multiple')->withFiles();
     }
 }

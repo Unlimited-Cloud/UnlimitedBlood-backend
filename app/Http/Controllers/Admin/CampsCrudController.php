@@ -3,21 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CampsRequest;
+use App\Models\Camps;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use DB;
 
 /**
  * Class CampsCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class CampsCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -26,8 +34,8 @@ class CampsCrudController extends CrudController
      */
     public function setup(): void
     {
-        CRUD::setModel(\App\Models\Camps::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/camps');
+        CRUD::setModel(Camps::class);
+        CRUD::setRoute(config('backpack.base.route_prefix').'/camps');
         CRUD::setEntityNameStrings('camps', 'camps');
 
         if (backpack_user()->hasRole('donor')) {
@@ -37,6 +45,7 @@ class CampsCrudController extends CrudController
         if (backpack_user()->hasRole('admin')) {
             $this->crud->denyAccess(['create', 'update', 'delete']);
         }
+
     }
 
     /**
@@ -65,6 +74,14 @@ class CampsCrudController extends CrudController
             CRUD::column('updated_at');
         }
 
+        // update attendee number by searching camp_id in donations table
+        $all_entries = $this->crud->getEntries();
+        foreach ($all_entries as $entry) {
+            $camp_id = $entry->getKey();
+            $attendees = DB::table('donations')->where('campId', $camp_id)->count();
+            $entry->attendees = $attendees;
+            $entry->save(); // Save the updated entry to persist the changes
+        }
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:

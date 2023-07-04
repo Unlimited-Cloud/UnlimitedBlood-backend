@@ -3,21 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\InventoryRequest;
+use App\Models\Inventory;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class InventoryCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class InventoryCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -26,13 +33,17 @@ class InventoryCrudController extends CrudController
      */
     public function setup(): void
     {
-        CRUD::setModel(\App\Models\Inventory::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/inventory');
+        CRUD::setModel(Inventory::class);
+        CRUD::setRoute(config('backpack.base.route_prefix').'/inventory');
         CRUD::setEntityNameStrings('inventory', 'inventory');
 
         if (backpack_user()->hasRole('donor')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        }
+
+        if (backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['create', 'update']);
         }
     }
 
@@ -66,6 +77,17 @@ class InventoryCrudController extends CrudController
     }
 
     /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupUpdateOperation(): void
+    {
+        $this->setupCreateOperation();
+    }
+
+    /**
      * Define what happens when the Create operation is loaded.
      *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
@@ -79,14 +101,16 @@ class InventoryCrudController extends CrudController
             'attributes' => [
                 'readonly' => 'readonly'
             ],
-            'default' => 1,
+            'default' => backpack_user()->organizations->id,
         ]);
         CRUD::addField([
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
-                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'],
+            'options' => [
+                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+            ],
             'allows_null' => false,
         ]);
         CRUD::field('donationType')->label('Donation Type');
@@ -106,16 +130,5 @@ class InventoryCrudController extends CrudController
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
-    }
-
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    protected function setupUpdateOperation()
-    {
-        $this->setupCreateOperation();
     }
 }

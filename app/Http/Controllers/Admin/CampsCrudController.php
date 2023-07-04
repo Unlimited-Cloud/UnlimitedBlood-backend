@@ -12,7 +12,8 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use DB;
+use Backpack\CRUD\app\Library\Validation\Rules\ValidUploadMultiple;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CampsCrudController
@@ -46,6 +47,14 @@ class CampsCrudController extends CrudController
             $this->crud->denyAccess(['create', 'update', 'delete']);
         }
 
+        $all_entries = $this->crud->getEntries();
+        foreach ($all_entries as $entry) {
+            $camp_id = $entry->getKey();
+            $attendees = DB::table('donations')->where('campId', $camp_id)->count();
+            $entry->attendees = $attendees;
+            $entry->save(); // Save the updated entry to persist the changes
+        }
+
     }
 
     /**
@@ -74,54 +83,10 @@ class CampsCrudController extends CrudController
             CRUD::column('updated_at');
         }
 
-        // update attendee number by searching camp_id in donations table
-        $all_entries = $this->crud->getEntries();
-        foreach ($all_entries as $entry) {
-            $camp_id = $entry->getKey();
-            $attendees = DB::table('donations')->where('campId', $camp_id)->count();
-            $entry->attendees = $attendees;
-            $entry->save(); // Save the updated entry to persist the changes
-        }
-
         /**
          * Columns can be defined using the fluent syntax or array syntax:
          * - CRUD::column('price')->type('number');
          * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
-    }
-
-    /**
-     * Define what happens when the Create operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-create
-     * @return void
-     */
-    protected function setupCreateOperation(): void
-    {
-        CRUD::addField([
-            'name' => 'organizationId',
-            'label' => 'Organization ID',
-            'attributes' => [
-                'readonly' => 'readonly',
-            ],
-            'default' => backpack_user()->organizations->id,
-
-        ]);
-        CRUD::field('name');
-        CRUD::field('address');
-        CRUD::field('startDate')->type('date');
-        CRUD::field('endDate')->type('date');
-        //CRUD::field('attendees');
-        // to upload multiple images and store them
-        CRUD::field('pictures')->type('upload_multiple')->withFiles();
-
-        # after the user creates a new camp, automatically create a new campDonor row in the database
-
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
@@ -133,6 +98,27 @@ class CampsCrudController extends CrudController
      */
     protected function setupUpdateOperation(): void
     {
+        $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Create operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-create
+     * @return void
+     */
+    protected function setupCreateOperation(): void
+    {
+
+        $this->crud->setValidation([
+            'startDate' => 'required',
+            'endDate' => 'required',
+            'pictures' => ValidUploadMultiple::field('required|min:1|max:5')
+                ->file('file|mimes:jpeg,png,jpg|max:2048'),
+            'address' => 'required',
+            'name' => 'required',
+        ]);
+
         CRUD::addField([
             'name' => 'organizationId',
             'label' => 'Organization ID',
@@ -147,7 +133,23 @@ class CampsCrudController extends CrudController
         # get startDate that's already in the database
         CRUD::field('startDate')->type('date');
         CRUD::field('endDate')->type('date');
-        //CRUD::field('attendees');
-        CRUD::field('pictures')->type('upload_multiple')->withFiles();
+
+        CRUD::field('pictures')->type('upload_multiple')->withFiles([
+            'temporaryUrl' => true,
+            'temporaryUrlExpirationTime' => 43200
+        ]);
+        // create route to uploaded images
+
+
+        /**
+         * Fields can be defined using the fluent syntax or array syntax:
+         * - CRUD::field('price')->type('number');
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
+         */
     }
+
+    /**
+     * @return void
+     */
+
 }

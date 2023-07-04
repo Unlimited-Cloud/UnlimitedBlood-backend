@@ -17,7 +17,7 @@
 @if(backpack_user()->can('inventory-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('inventory') }}"><i
                 class="nav-icon la la-boxes"></i>
-            Inventories</a></li>
+            Inventory</a></li>
 @endif
 @if(backpack_user()->can('donations-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('donations') }}"><i

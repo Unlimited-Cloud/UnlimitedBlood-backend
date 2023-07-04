@@ -95,6 +95,14 @@ class InventoryCrudController extends CrudController
      */
     protected function setupCreateOperation(): void
     {
+        $this->crud->setValidation([
+            'bloodType' => 'required',
+            'donationType' => 'required',
+            'quantity' => 'required',
+            'price' => 'required',
+
+        ]);
+
         CRUD::addField([
             'name' => 'organizationId',
             'label' => 'Organization ID',

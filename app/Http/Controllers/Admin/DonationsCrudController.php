@@ -99,6 +99,16 @@ class DonationsCrudController extends CrudController
      */
     protected function setupCreateOperation(): void
     {
+        $this->crud->setValidation([
+            'phoneNumber' => 'required|numeric',
+            'bloodType' => 'required',
+            'donationType' => 'required',
+            'quantity' => 'required|numeric',
+            'donationDate' => 'required|date',
+            'upperBP' => 'required|numeric',
+            'lowerBP' => 'required|numeric',
+        ]);
+
         CRUD::addField([
             'name' => 'organizationId',
             'label' => 'Organization ID',
@@ -128,8 +138,9 @@ class DonationsCrudController extends CrudController
             'name' => 'quantity',
             'label' => 'Quantity (ml)',
             'type' => 'number',
+
         ]);
-        CRUD::field('donationDate')->label('Donation Date')->type('date');
+        CRUD::field('donationDate')->label('Donation Date')->type('date')->default(today());
         CRUD::field('upperBP')->label('Upper Blood Pressure')->type('number');
         CRUD::field('lowerBP')->label('Upper Blood Pressure')->type('number');
         CRUD::field('weight')->type('number');

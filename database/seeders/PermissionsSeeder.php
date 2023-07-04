@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -19,7 +20,6 @@ class PermissionsSeeder extends Seeder
 
         // create permissions
         Permission::create(['name' => 'requests-access']);
-        Permission::create(['name' => 'camp-donors-access']);
         Permission::create(['name' => 'camps-access']);
         Permission::create(['name' => 'inventory-access']);
         Permission::create(['name' => 'organizations-access']);
@@ -31,7 +31,6 @@ class PermissionsSeeder extends Seeder
         // create roles and assign existing permissions
         $admin = Role::create(['name' => 'admin']);
         $admin->givePermissionTo('requests-access');
-        $admin->givePermissionTo('camp-donors-access');
         $admin->givePermissionTo('camps-access');
         $admin->givePermissionTo('inventory-access');
         $admin->givePermissionTo('organizations-access');
@@ -49,30 +48,43 @@ class PermissionsSeeder extends Seeder
         $organization->givePermissionTo('camps-access');
         $organization->givePermissionTo('donations-access');
         $organization->givePermissionTo('requests-access');
-        $organization->givePermissionTo('camp-donors-access');
         $organization->givePermissionTo('inventory-access');
         $organization->givePermissionTo('organizations-access');
 
-        $user1 = \App\Models\User::factory()->create([
+        $user1 = User::factory()->create([
             'name' => 'Test Admin',
             'phoneNumber' => '1234567890',
             'password' => bcrypt('password'),
         ]);
         $user1->assignRole($admin);
 
-        $user2 = \App\Models\User::factory()->create([
-            'name' => 'Test Donor',
+        $user2 = User::factory()->create([
+            'name' => 'Test Donor1',
             'phoneNumber' => '0909090909',
             'password' => bcrypt('password'),
         ]);
         $user2->assignRole($donor);
 
-        $user3 = \App\Models\User::factory()->create([
-            'name' => 'Test Organization',
+        $user3 = User::factory()->create([
+            'name' => 'Test Donor2',
             'phoneNumber' => '1111111111',
             'password' => bcrypt('password'),
         ]);
-        $user3->assignRole($organization);
+        $user3->assignRole($donor);
+
+        $user4 = User::factory()->create([
+            'name' => 'Test Organization1',
+            'phoneNumber' => '3333333333',
+            'password' => bcrypt('password'),
+        ]);
+        $user4->assignRole($organization);
+
+        $user5 = User::factory()->create([
+            'name' => 'Test Organization2',
+            'phoneNumber' => '2222222222',
+            'password' => bcrypt('password'),
+        ]);
+        $user5->assignRole($organization);
 
     }
 }

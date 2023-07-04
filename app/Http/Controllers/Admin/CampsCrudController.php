@@ -98,6 +98,8 @@ class CampsCrudController extends CrudController
         // to upload multiple images and store them
         CRUD::field('pictures')->type('upload_multiple')->withFiles();
 
+        # after the user creates a new camp, automatically create a new campDonor row in the database
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

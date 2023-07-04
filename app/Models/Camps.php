@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Camps extends Model
 {
@@ -35,6 +35,12 @@ class Camps extends Model
     ];
     // protected $hidden = [];
     // protected $dates = [];
+
+    public function organizations(): HasOne
+    {
+        return $this->hasOne(Organizations::class);
+    }
+
 
     /*
     |--------------------------------------------------------------------------

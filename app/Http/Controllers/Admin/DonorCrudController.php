@@ -3,21 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DonorRequest;
+use App\Models\Donor;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class DonorCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class DonorCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -26,8 +33,8 @@ class DonorCrudController extends CrudController
      */
     public function setup(): void
     {
-        CRUD::setModel(\App\Models\Donor::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/donor');
+        CRUD::setModel(Donor::class);
+        CRUD::setRoute(config('backpack.base.route_prefix').'/donor');
         CRUD::setEntityNameStrings('donor', 'donors');
 
         if (backpack_user()->hasRole('organization')) {
@@ -53,9 +60,6 @@ class DonorCrudController extends CrudController
             'name' => 'phoneNumber',
             'label' => 'Mobile Number',
             'type' => 'tel',
-            /*'searchLogic' => function ($query, $column, $searchTerm) {
-                $query->orWhere('phoneNumber', 'LIKE', '%' . $searchTerm . '%');
-            }*/
         ]);
         CRUD::column('email')->type('email');
         CRUD::column('fname');
@@ -65,8 +69,11 @@ class DonorCrudController extends CrudController
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
-                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-']]);
+            'options' => [
+                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+            ]
+        ]);
         CRUD::column('address');
         CRUD::column('gender');
         CRUD::column('birthDate');
@@ -80,6 +87,17 @@ class DonorCrudController extends CrudController
     }
 
     /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupUpdateOperation(): void
+    {
+        $this->setupCreateOperation();
+    }
+
+    /**
      * Define what happens when the Create operation is loaded.
      *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
@@ -90,21 +108,25 @@ class DonorCrudController extends CrudController
         CRUD::field('phoneNumber')->type('number');
         CRUD::field('email')->type('email');
         CRUD::field('fname')->type('text');
-        CRUD::field('mname')->type('text');;
-        CRUD::field('lname')->type('text');;
+        CRUD::field('mname')->type('text');
+        CRUD::field('lname')->type('text');
         CRUD::field('password');
         CRUD::addField([
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
-                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-']]);
+            'options' => [
+                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+            ]
+        ]);
         CRUD::field('address');
         CRUD::addField([
             'name' => 'gender',
             'label' => 'Gender',
             'type' => 'enum',
-            'options' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']]);
+            'options' => ['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']
+        ]);
         CRUD::field('birthDate')->type('date');
         CRUD::field('user_id');
 
@@ -113,16 +135,5 @@ class DonorCrudController extends CrudController
          * - CRUD::field('price')->type('number');
          * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
-    }
-
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    protected function setupUpdateOperation(): void
-    {
-        $this->setupCreateOperation();
     }
 }

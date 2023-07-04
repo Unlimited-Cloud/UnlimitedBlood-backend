@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
-        (array)config('backpack.base.web_middleware', 'web'),
-        (array)config('backpack.base.middleware_key', 'admin')
+        (array) config('backpack.base.web_middleware', 'web'),
+        (array) config('backpack.base.middleware_key', 'admin')
     ),
     'namespace' => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
@@ -22,7 +22,6 @@ Route::group([
     Route::crud('organizations', 'OrganizationsCrudController');
     Route::crud('inventory', 'InventoryCrudController');
     Route::crud('camps', 'CampsCrudController');
-    Route::crud('camp-donors', 'CampDonorsCrudController');
     Route::crud('requests', 'RequestsCrudController');
     //Route::crud('user', 'UserCrudController');
 }); // this should be the absolute last line of this file

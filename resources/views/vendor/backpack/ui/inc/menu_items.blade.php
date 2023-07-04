@@ -32,10 +32,6 @@
                 class="nav-icon la la-campground"></i>
             Camps</a></li>
 @endif
-@if(backpack_user()->can('camp-donors-access'))
-    <li class="nav-item"><a class="nav-link" href="{{ backpack_url('camp-donors') }}"><i
-                class="nav-icon la la-user-plus"></i> Camp donors</a></li>
-@endif
 @if(backpack_user()->can('user-access'))
     <li class="nav-item nav-dropdown">
 

@@ -58,10 +58,25 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users');
         });
 
+        Schema::create('camps', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('organizationId');
+            $table->string('name');
+            $table->string('address');
+            $table->dateTime('startDate');
+            $table->dateTime('endDate');
+            $table->integer('attendees')->nullable();
+            $table->binary('pictures')->nullable();
+            $table->timestamps();
+
+            $table->foreign('organizationId')->references('id')->on('organizations');
+
+        });
+
         Schema::create('donations', function (Blueprint $table) {
             $table->string('phoneNumber');
             $table->string('bloodType');
-            $table->string('donationType');
+            $table->string('donationType')->nullable();
             $table->integer('quantity');
             $table->date('donationDate');
             $table->unsignedBigInteger('organizationId');
@@ -69,8 +84,11 @@ return new class extends Migration {
             $table->integer('lowerBP')->nullable();
             $table->decimal('weight')->nullable();
             $table->mediumText('notes')->nullable();
+            $table->unsignedBigInteger('campId')->nullable();
+            $table->string('status')->default('interested');
             $table->timestamps();
 
+            $table->foreign('campId')->references('id')->on('camps');
             $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
             $table->foreign('organizationId')->references('id')->on('organizations');
         });
@@ -94,32 +112,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('camps', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('organizationId');
-            $table->string('name');
-            $table->string('address');
-            $table->dateTime('startDate');
-            $table->dateTime('endDate');
-            $table->integer('attendees')->nullable();
-            $table->binary('pictures')->nullable();
-            $table->timestamps();
-
-            $table->foreign('organizationId')->references('id')->on('organizations');
-
-        });
-
-        Schema::create('camp_donors', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('campId');
-            $table->string('phoneNumber');
-            $table->string('status')->default('interested');
-            $table->timestamps();
-
-            $table->foreign('campId')->references('id')->on('camps');
-            $table->foreign('phoneNumber')->references('phoneNumber')->on('donors');
-        });
-
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber');
@@ -141,16 +133,16 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('users');
+    {   //order matters
         Schema::dropIfExists('donations');
+        Schema::dropIfExists('requests');
         Schema::dropIfExists('donors');
         Schema::dropIfExists('inventory');
-        Schema::dropIfExists('organizations');
         Schema::dropIfExists('camps');
-        Schema::dropIfExists('camp_donors');
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('organizations');
         Schema::dropIfExists('glossary');
+        Schema::dropIfExists('users');
+
 
     }
 };

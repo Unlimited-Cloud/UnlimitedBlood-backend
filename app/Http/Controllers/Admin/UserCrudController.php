@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use Backpack\PermissionManager\app\Http\Controllers\UserCrudController as BaseUserCrudController;
 
-
 use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -140,7 +139,7 @@ class UserCrudController extends BaseUserCrudController
      *
      * @return RedirectResponse
      */
-    public function update()
+    public function update(): RedirectResponse
     {
         $this->crud->setRequest($this->crud->validateRequest());
         $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
@@ -155,9 +154,9 @@ class UserCrudController extends BaseUserCrudController
     protected function handlePasswordInput($request)
     {
         // Remove fields not present on the user.
-        $request->request->remove('password_confirmation');
+        /*$request->request->remove('password_confirmation');
         $request->request->remove('roles_show');
-        $request->request->remove('permissions_show');
+        $request->request->remove('permissions_show');*/
 
         // Encrypt password if specified.
         if ($request->input('password')) {
@@ -188,13 +187,11 @@ class UserCrudController extends BaseUserCrudController
                     'label' => trans('backpack::permissionmanager.password'),
                     'type' => 'password',
                 ],
-
                 [
                     'name' => 'password_confirmation',
                     'label' => trans('backpack::permissionmanager.password_confirmation'),
                     'type' => 'password',
                 ],
-
                 [
                     // two interconnected entities
                     'label' => trans('backpack::permissionmanager.user_role_permission'),
@@ -208,7 +205,7 @@ class UserCrudController extends BaseUserCrudController
                             'entity' => 'roles', // the method that defines the relationship in your Model
                             'entity_secondary' => 'permissions', // the method that defines the relationship in your Model
                             'attribute' => 'name', // foreign key attribute that is shown to user
-                            'model' => config('permission.models.role'), // foreign key model
+                            'model' => 'Backpack\PermissionManager\app\Models\Role', // foreign key model
                             'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
                             'number_columns' => 3, //can be 1,2,3,4,6
                         ],
@@ -218,7 +215,7 @@ class UserCrudController extends BaseUserCrudController
                             'entity' => 'permissions', // the method that defines the relationship in your Model
                             'entity_primary' => 'roles', // the method that defines the relationship in your Model
                             'attribute' => 'name', // foreign key attribute that is shown to user
-                            'model' => config('permission.models.permission'), // foreign key model
+                            'model' => 'Backpack\PermissionManager\app\Models\Permission', // foreign key model
                             'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
                             'number_columns' => 3, //can be 1,2,3,4,6
                         ],

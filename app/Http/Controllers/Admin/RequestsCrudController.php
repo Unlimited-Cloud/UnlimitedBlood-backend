@@ -43,6 +43,11 @@ class RequestsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
+        if (backpack_user()->hasRole('donor')) {
+            $user_number = backpack_user()->phoneNumber;
+            $this->crud->addClause('where', 'phoneNumber', '=', $user_number);
+        }
+        
         CRUD::column('phoneNumber')->label('Mobile Number');
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');

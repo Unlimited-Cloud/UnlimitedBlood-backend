@@ -3,21 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\RequestsRequest;
+use App\Models\Requests;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class RequestsCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class RequestsCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -26,8 +33,8 @@ class RequestsCrudController extends CrudController
      */
     public function setup(): void
     {
-        CRUD::setModel(\App\Models\Requests::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
+        CRUD::setModel(Requests::class);
+        CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
         if (!backpack_user()->hasRole('admin')) {
@@ -47,7 +54,7 @@ class RequestsCrudController extends CrudController
             $user_number = backpack_user()->phoneNumber;
             $this->crud->addClause('where', 'phoneNumber', '=', $user_number);
         }
-        
+
         CRUD::column('phoneNumber')->label('Mobile Number');
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');
@@ -80,7 +87,16 @@ class RequestsCrudController extends CrudController
             'allows_null' => false,
 
         ]);
-        CRUD::field('donationType')->label('Donation Type');
+        CRUD::addField([
+            'name' => 'donationType',
+            'label' => 'Donation Type',
+            'type' => 'enum',
+
+            'options' => [
+                'Whole Blood' => 'Whole Blood', 'Platelets' => 'Platelets', 'Plasma' => 'Plasma'
+            ],
+
+        ]);
         CRUD::field('quantity')->label('Quantity (ml)');
         CRUD::field('requestDate')->label('Request Date');
         CRUD::field('address');

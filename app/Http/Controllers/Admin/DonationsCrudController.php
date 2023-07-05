@@ -133,7 +133,16 @@ class DonationsCrudController extends CrudController
                 'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
             ],
         ]);
-        CRUD::field('donationType');
+        CRUD::addField([
+            'name' => 'donationType',
+            'label' => 'Donation Type',
+            'type' => 'enum',
+
+            'options' => [
+                'Whole Blood' => 'Whole Blood', 'Platelets' => 'Platelets', 'Plasma' => 'Plasma'
+            ],
+
+        ]);
         CRUD::addField([
             'name' => 'quantity',
             'label' => 'Quantity (ml)',

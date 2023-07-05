@@ -121,7 +121,16 @@ class InventoryCrudController extends CrudController
             ],
             'allows_null' => false,
         ]);
-        CRUD::field('donationType')->label('Donation Type');
+        CRUD::addField([
+            'name' => 'donationType',
+            'label' => 'Donation Type',
+            'type' => 'enum',
+
+            'options' => [
+                'Whole Blood' => 'Whole Blood', 'Platelets' => 'Platelets', 'Plasma' => 'Plasma'
+            ],
+
+        ]);
         CRUD::addField([
             'name' => 'quantity',
             'label' => 'Quantity (ml)',

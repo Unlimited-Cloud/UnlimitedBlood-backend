@@ -67,11 +67,7 @@ return [
         'organizations' => [
             'driver' => 'eloquent',
             'model' => App\Models\Organizations::class,
-        ],
-        'donors' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Donor::class,
-        ],
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

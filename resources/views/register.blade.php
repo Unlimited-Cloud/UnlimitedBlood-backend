@@ -65,8 +65,8 @@
                                        name="website" id="website" value="{{ old('website') }}">
                                 @if ($errors->has('website'))
                                     <span class="invalid-feedback">
-                    <strong>{{ $errors->first('website') }}</strong>
-                </span>
+                                    <strong>{{ $errors->first('website') }}</strong>
+                                </span>
                                 @endif
                             </div>
                         </div>

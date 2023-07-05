@@ -2,16 +2,16 @@
 
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-4">
-            <h3 class="text-center mb-4">{{ trans('backpack::base.register') }}</h3>
+        <div class="col-12 col-md-8 col-lg-5">
+            <h3 class="text-center mb-4">{{ 'Register Your Organization' }}</h3>
             <div class="card">
                 <div class="card-body">
-                    <form class="col-md-12 p-t-10" role="form" method="POST"
+                    <form class="col-md-15 p-t-10" role="form" method="POST"
                           action="{{ route('backpack.auth.register') }}">
                         {!! csrf_field() !!}
 
                         <div class="form-group">
-                            <label class="control-label" for="name">{{ trans('backpack::base.name') }}</label>
+                            <label class="control-label" for="name">{{ 'Organization Name' }}</label>
 
                             <div>
                                 <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
@@ -19,8 +19,8 @@
 
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('name') }}</strong>
+                                        </span>
                                 @endif
                             </div>
                         </div>
@@ -31,7 +31,7 @@
 
                             <div>
                                 <input
-                                    type="{{ backpack_authentication_column()==backpack_email_column()?'email':'text'}}"
+                                    type="{{ backpack_authentication_column()==backpack_email_column()?'phoneNumber':'text'}}"
                                     class="form-control{{ $errors->has(backpack_authentication_column()) ? ' is-invalid' : '' }}"
                                     name="{{ backpack_authentication_column() }}"
                                     id="{{ backpack_authentication_column() }}"
@@ -39,11 +39,55 @@
 
                                 @if ($errors->has(backpack_authentication_column()))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first(backpack_authentication_column()) }}</strong>
+                                            <strong>{{ $errors->first(backpack_authentication_column()) }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="email">{{ 'Email' }}</label>
+                            <div>
+                                <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                       name="email" id="email" value="{{ old('email') }}">
+                                @if ($errors->has('email'))
+                                    <span class="invalid-feedback">
+                                         <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="control-label" for="website">{{ 'Website' }}</label>
+                            <div>
+                                <input type="url" class="form-control{{ $errors->has('website') ? ' is-invalid' : '' }}"
+                                       name="website" id="website" value="{{ old('website') }}">
+                                @if ($errors->has('website'))
+                                    <span class="invalid-feedback">
+                    <strong>{{ $errors->first('website') }}</strong>
+                </span>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label" for="address">{{ 'Address' }}</label>
+
+                            <div>
+                                <input type="text"
+                                       class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}"
+                                       name="address" id="address" value="{{ old('address') }}">
+
+                                @if ($errors->has('address'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('address') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <label class="control-label" for="password">{{ trans('backpack::base.password') }}</label>
@@ -55,8 +99,8 @@
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
                                 @endif
                             </div>
                         </div>
@@ -72,11 +116,27 @@
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                            <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                        </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" for="logo">{{ 'Logo' }}</label>
+
+                            <div>
+                                <input type="file" class="form-control{{ $errors->has('logo') ? ' is-invalid' : '' }}"
+                                       name="logo" id="logo">
+
+                                @if ($errors->has('logo'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('logo') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
+
 
                         <div class="form-group">
                             <div>

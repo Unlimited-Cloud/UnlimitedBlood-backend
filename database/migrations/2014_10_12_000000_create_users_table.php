@@ -47,7 +47,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id')->unique();
             $table->string('email')->unique();
             $table->string('name');
-            $table->string('password');
             $table->string('address');
             $table->string('website')->nullable();
             $table->binary('logo')->nullable();

@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -28,7 +29,6 @@ class Organizations extends Model
         'phoneNumber',
         'email',
         'name',
-        'password',
         'address',
         'logo',
         'user_id'
@@ -46,7 +46,7 @@ class Organizations extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

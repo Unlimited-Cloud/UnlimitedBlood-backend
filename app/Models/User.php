@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,6 +21,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'name',
         'phoneNumber',
@@ -46,12 +48,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function donors(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function donors(): HasOne
     {
         return $this->hasOne(Donor::class);
     }
 
-    public function organizations(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function organizations(): HasOne
     {
         return $this->hasOne(Organizations::class);
     }

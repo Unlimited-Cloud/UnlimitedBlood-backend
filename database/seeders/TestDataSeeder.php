@@ -19,14 +19,12 @@ class TestDataSeeder extends Seeder
             'name' => 'Test Organization1',
             'phoneNumber' => '3333333333',
             'user_id' => 4,
-            'password' => bcrypt('password'),
         ]);
 
         Organizations::factory()->create([
             'name' => 'Test Organization2',
             'phoneNumber' => '2222222222',
             'user_id' => 5,
-            'password' => bcrypt('password'),
         ]);
 
         Donor::factory()->create([

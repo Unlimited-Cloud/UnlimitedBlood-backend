@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Donations extends Model
 {
@@ -37,18 +37,20 @@ class Donations extends Model
         'notes',
 
     ];
-    protected $primaryKey = 'phoneNumber';
     // protected $hidden = [];
     // protected $dates = [];
     protected $casts = [
         'donationDate' => 'date:Y-m-d',
     ];
 
-    public function camp(): HasOne
+    public function organizations(): BelongsTo
     {
+        return $this->belongsTo(Organizations::class);
+    }
 
-        return $this->hasOne(Camps::class);
-
+    public function camp(): belongsTo
+    {
+        return $this->belongsTo(Camps::class, 'campId', 'id');
     }
 
 

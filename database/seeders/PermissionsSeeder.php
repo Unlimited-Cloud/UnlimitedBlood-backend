@@ -49,7 +49,6 @@ class PermissionsSeeder extends Seeder
         $organization->givePermissionTo('donations-access');
         $organization->givePermissionTo('requests-access');
         $organization->givePermissionTo('inventory-access');
-        $organization->givePermissionTo('organizations-access');
 
         $user1 = User::factory()->create([
             'name' => 'Test Admin',

@@ -32,9 +32,11 @@
     ->content('Use the BloodNepal app for more features like tracking blood pressure, sending blood requests, and more.');
     }
 @endphp
-# section will include links to app and other stuff
+
 @section('content')
-    <p> Download it from the Play Store: <a
-            href="https://play.google.com/store/apps/details?id=com.bloodnepal.bloodnepal">BloodNepal</a></p>
-    <p> Download it from the IOS Store: <a href="http://github.com/sidtuladhar">BloodNepal</a></p>
+    @can(backpack_user()->hasRole('donor'))
+        <p> Download it from the Play Store: <a
+                href="https://play.google.com/store/apps/details?id=com.bloodnepal.bloodnepal">BloodNepal</a></p>
+        <p> Download it from the IOS Store: <a href="http://github.com/sidtuladhar">BloodNepal</a></p>
+    @endcan
 @endsection

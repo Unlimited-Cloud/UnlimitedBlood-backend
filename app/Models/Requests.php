@@ -31,6 +31,10 @@ class Requests extends Model
         'address',
         'fulfilled_by',
     ];
+    protected $casts = [
+        'fulfilled_by' => 'integer',
+        'quantity' => 'integer',
+    ];
     // protected $hidden = [];
     // protected $dates = [];
 

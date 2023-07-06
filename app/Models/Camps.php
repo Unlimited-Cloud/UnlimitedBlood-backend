@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Camps extends Model
 {
@@ -36,9 +36,9 @@ class Camps extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    public function organizations(): HasOne
+    public function organizations(): BelongsTo
     {
-        return $this->hasOne(Organizations::class);
+        return $this->belongsTo(Organizations::class);
     }
 
 

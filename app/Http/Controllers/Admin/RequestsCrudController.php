@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\RequestsRequest;
+use App\Models\Inventory;
 use App\Models\Requests;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -34,7 +35,7 @@ class RequestsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Requests::class);
-        CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
         if (!backpack_user()->hasRole('admin')) {
@@ -97,7 +98,7 @@ class RequestsCrudController extends CrudController
             ],
 
         ]);
-        CRUD::field('quantity')->label('Quantity (ml)');
+        CRUD::field('quantity')->label('Quantity (ml)')->type('number');
         CRUD::field('requestDate')->label('Request Date');
         CRUD::field('address');
         if (backpack_user()->hasRole('admin')) {
@@ -148,7 +149,33 @@ class RequestsCrudController extends CrudController
                 ],
                 'allows_null' => true,
                 'default' => null,
-            ]
+            ]);
+
+        Requests::updating(function (Requests $request) {
+
+
+            if ($request->fulfilled_by != null) {
+                $inventory = Inventory::where([['organizationId', '=', backpack_user()->organizations->id],
+                    ['bloodType', '=', $request->bloodType],
+                    ['donationType', '=', $request->donationType],
+                    ['quantity', '>=', $request->quantity]])
+                    ->first();
+
+                if ($inventory == null) {
+
+                    $request->fulfilled_by = null;
+                    $request->save();
+                    return redirect('admin/requests')->withErrors(['error' => 'Insufficient inventory available.']);
+                } else {
+
+                    $inventory->quantity = $inventory->quantity - $request->quantity;
+                    $inventory->update(['quantity' => $inventory->quantity]);
+                    return redirect('admin/requests');
+
+                }
+            }
+            return redirect('admin/requests');
+        }
         );
 
     }

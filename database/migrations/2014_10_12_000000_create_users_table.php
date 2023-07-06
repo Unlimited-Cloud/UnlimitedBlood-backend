@@ -73,6 +73,7 @@ return new class extends Migration {
         });
 
         Schema::create('donations', function (Blueprint $table) {
+            $table->id();
             $table->string('phoneNumber');
             $table->string('bloodType');
             $table->string('donationType')->nullable();

@@ -34,7 +34,7 @@ class DonationsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Donations::class);
-        CRUD::setRoute(config('backpack.base.route_prefix').'/donations');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/donations');
         CRUD::setEntityNameStrings('donations', 'donations');
 
         if (backpack_user()->hasRole('donor')) {
@@ -104,11 +104,11 @@ class DonationsCrudController extends CrudController
             'bloodType' => 'required',
             'donationType' => 'required',
             'quantity' => 'required|numeric',
+            'campID' => 'required',
             'donationDate' => 'required|date',
             'upperBP' => 'required|numeric',
             'lowerBP' => 'required|numeric',
         ]);
-
         CRUD::addField([
             'name' => 'organizationId',
             'label' => 'Organization ID',
@@ -121,6 +121,8 @@ class DonationsCrudController extends CrudController
             'name' => 'campId',
             'label' => 'Camp ID',
             'type' => 'select',
+            'entity' => 'camp',
+            'attribute' => 'name',
 
         ]);
         CRUD::field('phoneNumber')->label('Mobile Number')->type('number');
@@ -137,11 +139,9 @@ class DonationsCrudController extends CrudController
             'name' => 'donationType',
             'label' => 'Donation Type',
             'type' => 'enum',
-
             'options' => [
                 'Whole Blood' => 'Whole Blood', 'Platelets' => 'Platelets', 'Plasma' => 'Plasma'
             ],
-
         ]);
         CRUD::addField([
             'name' => 'quantity',

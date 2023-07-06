@@ -83,17 +83,19 @@
                                        name="{{ $field }}" value="{{ old($field) ? old($field) : $user->$field }}">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                @php
-                                    $label = 'Email';
-                                    $field = 'email';
-                                @endphp
-                                <label class="required">{{ $label }}</label>
-                                <input required class="form-control" type="email" name="{{ $field }}"
-                                       value="{{ old($field) ? old($field) : backpack_user()->organizations->$field }}">
-                            </div>
-                            @if(backpack_user()->hasRole('organization'))
+                        @if(backpack_user()->hasRole('organization'))
+                            <div class="row">
+
+                                <div class="col-md-6 form-group">
+                                    @php
+                                        $label = 'Email';
+                                        $field = 'email';
+                                    @endphp
+                                    <label class="required">{{ $label }}</label>
+                                    <input required class="form-control" type="email" name="{{ $field }}"
+                                           value="{{ old($field) ? old($field) : backpack_user()->organizations->$field }}">
+                                </div>
+
                                 <div class="col-md-6 form-group">
                                     @php
                                         $label = 'Website';
@@ -102,9 +104,25 @@
                                     <label>{{ $label }}</label>
                                     <input class="form-control" type="url" name="{{ $field }}"
                                            value="{{ old($field) ? old($field) : backpack_user()->organizations->$field }}">
-                                    @endif
+
                                 </div>
-                        </div>
+                            </div>
+                        @endif
+
+                        @if (backpack_user()->hasRole('donor'))
+                            <div class="row">
+
+                                <div class="col-md-6 form-group">
+                                    @php
+                                        $label = 'Email';
+                                        $field = 'email';
+                                    @endphp
+                                    <label class="required">{{ $label }}</label>
+                                    <input required class="form-control" type="email" name="{{ $field }}"
+                                           value="{{ old($field) ? old($field) : backpack_user()->donors->$field }}">
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
 

@@ -25,7 +25,7 @@
     }
     if (backpack_user()->hasRole('donor')) {
          Widget::add()
-    ->to('after_content')
+    ->to('before_content')
     ->type('alert')
     ->class('alert alert-danger mb-2')
     ->heading('Notice')
@@ -34,9 +34,9 @@
 @endphp
 
 @section('content')
-    @can(backpack_user()->hasRole('donor'))
+    @if(backpack_user()->hasRole('donor'))
         <p> Download it from the Play Store: <a
                 href="https://play.google.com/store/apps/details?id=com.bloodnepal.bloodnepal">BloodNepal</a></p>
         <p> Download it from the IOS Store: <a href="http://github.com/sidtuladhar">BloodNepal</a></p>
-    @endcan
+    @endif
 @endsection

@@ -13,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class RequestsCrudController
@@ -38,8 +39,14 @@ class RequestsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
-        if (!backpack_user()->hasRole('admin')) {
-            $this->crud->denyAccess(['delete', 'create',]);
+        if (backpack_user()->hasRole('donor')) {
+            $this->crud->denyAccess(['delete', 'create', 'update']);
+        }
+        if (backpack_user()->hasRole('organization')) {
+            $this->crud->denyAccess(['delete', 'create']);
+        }
+        if (backpack_user()->hasRole('admin')) {
+            $this->crud->denyAccess(['create', 'update']);
         }
     }
 
@@ -125,6 +132,16 @@ class RequestsCrudController extends CrudController
      */
     protected function setupUpdateOperation(): void
     {
+
+        $this->crud->setValidation([
+            'phoneNumber' => 'required',
+            'donationType' => 'required',
+            'address' => 'required',
+            'quantity' => 'required',
+            'requestDate' => 'required',
+
+        ]);
+
         CRUD::field('phoneNumber')->attributes(["readonly" => "readonly"])->label('Mobile Number');
         CRUD::addField([
             'name' => 'bloodType',
@@ -173,11 +190,15 @@ class RequestsCrudController extends CrudController
 
                     $request->fulfilled_by = null;
                     $request->save();
-                    return redirect('admin/requests')->withErrors(['error' => 'Insufficient inventory available.']);
+                    Alert::error('Insufficient inventory available')->flash();
+                    Alert::warning('Please update your inventory')->flash();
+
+                    return redirect('admin/requests');
                 } else {
 
                     $inventory->quantity = $inventory->quantity - $request->quantity;
                     $inventory->update(['quantity' => $inventory->quantity]);
+                    Alert::success('Request fulfilled successfully')->flash();
                     return redirect('admin/requests');
 
                 }

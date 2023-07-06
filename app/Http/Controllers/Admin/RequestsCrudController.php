@@ -56,6 +56,11 @@ class RequestsCrudController extends CrudController
             $this->crud->addClause('where', 'phoneNumber', '=', $user_number);
         }
 
+        if (backpack_user()->hasRole('organization')) {
+            $user_organization_id = backpack_user()->organizations->id;
+            $this->crud->addClause('where', 'fulfilled_by', '=', null);
+        }
+
         CRUD::column('phoneNumber')->label('Mobile Number');
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');
@@ -128,7 +133,10 @@ class RequestsCrudController extends CrudController
                 'disabled' => 'disabled',
             ],
             'type' => 'enum',
-            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'options' => [
+                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+            ],
             'allows_null' => false,
 
         ]);

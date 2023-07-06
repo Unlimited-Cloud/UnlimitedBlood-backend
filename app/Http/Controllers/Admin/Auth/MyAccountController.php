@@ -52,7 +52,9 @@ class MyAccountController extends BackpackMyAccountController
 
         if (backpack_user()->hasRole('donor')) {
             $result2 = backpack_user()->donors()->update([
-                'name' => $request->name,
+                'fname' => $request->name,
+                'mname' => $request->mname,
+                'lname' => $request->lname,
                 'phoneNumber' => $request->phoneNumber,
                 'email' => $request->email,
             ]);

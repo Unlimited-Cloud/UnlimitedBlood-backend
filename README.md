@@ -6,6 +6,12 @@ This is the backend of the BloodNepal project. This project is made using:
 - PHP 8.2.7
 - Backpack for Laravel 6.0.0
 
+# Screenshots
+
+![Admin Panel](resources%2Fscreenshots%2FScreenshot%202023-07-07%20at%2011.10.06.png)
+<br><br>
+![Organization Panel](resources%2Fscreenshots%2FScreenshot%202023-07-07%20at%2011.14.36.png)
+
 ## Laravel Introduction
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>

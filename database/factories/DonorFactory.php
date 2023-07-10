@@ -23,7 +23,7 @@ class DonorFactory extends Factory
             'lname' => fake()->lastName(),
             'password' => bcrypt('password'),
             'bloodType' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-            'address' => fake()->date(),
+            'address' => fake()->address(),
             'gender' => fake()->randomElement(['Male', 'Female', 'Other']),
             'birthDate' => fake()->date(),
             'profilePicture' => fake()->imageUrl(),

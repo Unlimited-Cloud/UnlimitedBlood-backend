@@ -32,6 +32,17 @@
     ->content('Use the BloodNepal app for more features like tracking blood pressure, sending blood requests, and more.
     ');
     }
+    if (!backpack_user()->hasRole('organization')) {
+            Widget::add()
+    ->to('after_content')
+    ->type('progress')
+    ->class('card text-white bg-red mb-2')
+    ->value(DB::table('donors')->count())
+    ->description('Donors')
+    ->progress(DB::table('donors')->count())
+    ->hint(100 - DB::table('donors')->count() . ' more donors needed to reach 100');
+    }
+
 @endphp
 
 @section('content')

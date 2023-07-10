@@ -3,7 +3,6 @@
 use App\Http\Controllers\DonorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +24,5 @@ Route::put('/login', [DonorController::class, 'login']);
 Route::put('/logout', [DonorController::class, 'logout']);
 
 Route::post('/editProfile', [DonorController::class, 'editProfile']);
+
+Route::get('/leaderboard', [DonorController::class, 'leaderboard']);

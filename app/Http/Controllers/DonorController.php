@@ -6,6 +6,7 @@ use App\Models\Donor;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DonorController
@@ -89,7 +90,42 @@ class DonorController
         } catch (Exception) {
             return response()->json(['error' => 'An error occurred'], 500);
         }
+    }
+
+    public function leaderboard(Request $request): JsonResponse
+    {
+        $phoneNumber = $request->input('phoneNumber');
+
+        try {
+            $donationCounts = DB::table('donations')
+                ->join('donors', 'donations.phoneNumber', '=', 'donors.phoneNumber')
+                ->select('donors.fname', 'donors.mname', 'donors.lname', 'donations.phoneNumber',
+                    DB::raw('COUNT(*) as count'), DB::raw('SUM(donations.quantity) as totalQuantity'))
+                ->groupBy('donors.fname', 'donors.mname', 'donors.lname', 'donations.phoneNumber')
+                ->get();
+
+            $result = [];
+            foreach ($donationCounts as $donation) {
+                $count = $donation->count;
+                $totalQuantity = $donation->totalQuantity;
+
+                $result[] = [
+                    'fname' => $donation->fname,
+                    'mname' => $donation->mname,
+                    'lname' => $donation->lname,
+                    'count' => $count,
+                    'totalQuantity' => $totalQuantity,
+                ];
+            }
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+
+            return response()->json(['error' => $e], 500);
+        }
 
     }
+
 
 }

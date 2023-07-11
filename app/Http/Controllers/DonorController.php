@@ -110,6 +110,7 @@ class DonorController
                 $totalQuantity = $donation->totalQuantity;
 
                 $result[] = [
+                    'phoneNumber' => $donation->phoneNumber,
                     'fname' => $donation->fname,
                     'mname' => $donation->mname,
                     'lname' => $donation->lname,
@@ -117,6 +118,10 @@ class DonorController
                     'totalQuantity' => $totalQuantity,
                 ];
             }
+
+            usort($result, function ($a, $b) {
+                return $b['count'] <=> $a['count'];
+            });
 
             return response()->json($result);
 

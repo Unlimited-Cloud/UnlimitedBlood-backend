@@ -38,7 +38,7 @@ class Camps extends Model
 
     public function organizations(): BelongsTo
     {
-        return $this->belongsTo(Organizations::class);
+        return $this->belongsTo(Organizations::class, 'organizationId');
     }
 
 

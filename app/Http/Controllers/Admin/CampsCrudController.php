@@ -71,12 +71,20 @@ class CampsCrudController extends CrudController
         }
 
         CRUD::column('name');
+        CRUD::addColumn([
+            'name' => 'organizationId',
+            'label' => 'Organization',
+            'model' => 'App\Models\Organizations',
+            'entity' => 'organizations',
+            'attribute' => 'name',
+
+        ]);
         CRUD::column('address');
         CRUD::column('startDate')->label('Start Date');
         CRUD::column('endDate')->label('End Date');
         CRUD::column('attendees');
         CRUD::column('pictures')->type('image');
-        CRUD::column('organizationId');
+
         if (backpack_user()->hasRole('admin')) {
 
             CRUD::column('created_at');

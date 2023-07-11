@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inventory extends Model
 {
@@ -42,6 +43,10 @@ class Inventory extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function organizations(): BelongsTo
+    {
+        return $this->belongsTo(Organizations::class, 'organizationId');
+    }
 
     /*
     |--------------------------------------------------------------------------

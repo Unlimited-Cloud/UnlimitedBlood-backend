@@ -61,7 +61,14 @@ class InventoryCrudController extends CrudController
         }
         CRUD::column('id')->label('ID');
         if (backpack_user()->hasRole('admin')) {
-            CRUD::column('organizationId')->label('Organization ID');
+            CRUD::addColumn([
+                'name' => 'organizationId',
+                'label' => 'Organization',
+                'model' => 'App\Models\Organizations',
+                'entity' => 'organizations',
+                'attribute' => 'name',
+
+            ]);
         }
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');

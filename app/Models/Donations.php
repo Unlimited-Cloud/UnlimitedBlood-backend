@@ -45,10 +45,10 @@ class Donations extends Model
 
     public function organizations(): BelongsTo
     {
-        return $this->belongsTo(Organizations::class);
+        return $this->belongsTo(Organizations::class, 'organizationId', 'id');
     }
 
-    public function camp(): belongsTo
+    public function camps(): belongsTo
     {
         return $this->belongsTo(Camps::class, 'campId', 'id');
     }

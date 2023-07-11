@@ -37,7 +37,7 @@ class DonationsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix').'/donations');
         CRUD::setEntityNameStrings('donations', 'donations');
 
-        if (backpack_user()->hasRole('donor')) {
+        if (!backpack_user()->hasRole('organization')) {
             $this->crud->denyAccess(['create', 'update', 'delete']);
         }
     }
@@ -65,8 +65,20 @@ class DonationsCrudController extends CrudController
         CRUD::column('quantity')->label('Quantity (ml)');
         CRUD::column('donationDate')->label('Date');
         if (backpack_user()->hasRole('admin')) {
-            CRUD::column('organizationId')->label('Organization ID');
-            CRUD::column('campId')->label('Camp ID');
+            CRUD::addColumn([
+                'name' => 'organizationId',
+                'label' => 'Organization',
+                'model' => 'App\Models\Organizations',
+                'entity' => 'organizations',
+                'attribute' => 'name',
+            ]);
+            CRUD::addColumn([
+                'name' => 'campId',
+                'label' => 'Camp',
+                'model' => 'App\Models\Camps',
+                'entity' => 'camps',
+                'attribute' => 'name',
+            ]);
         }
         CRUD::column('upperBP')->label('Upper BP');
         CRUD::column('lowerBP')->label('Lower BP');
@@ -104,7 +116,6 @@ class DonationsCrudController extends CrudController
             'bloodType' => 'required',
             'donationType' => 'required',
             'quantity' => 'required|numeric',
-            'campId' => 'required|numeric',
             'donationDate' => 'required|date',
             'upperBP' => 'required|numeric',
             'lowerBP' => 'required|numeric',
@@ -121,7 +132,7 @@ class DonationsCrudController extends CrudController
             'name' => 'campId',
             'label' => 'Camp ID',
             'type' => 'select',
-            'entity' => 'camp',
+            'entity' => 'camps',
             'attribute' => 'name',
             'model' => "App\Models\Camps",
 

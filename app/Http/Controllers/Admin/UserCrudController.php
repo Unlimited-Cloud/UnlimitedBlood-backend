@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Backpack\PermissionManager\app\Http\Controllers\UserCrudController as BaseUserCrudController;
-
 use App\Http\Requests\UserRequest;
+use App\Models\User;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\PermissionManager\app\Http\Controllers\UserCrudController as BaseUserCrudController;
 use Backpack\PermissionManager\app\Http\Requests\UserStoreCrudRequest as StoreRequest;
 use Backpack\PermissionManager\app\Http\Requests\UserUpdateCrudRequest as UpdateRequest;
 use Illuminate\Http\RedirectResponse;
@@ -19,11 +24,11 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserCrudController extends BaseUserCrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -33,8 +38,8 @@ class UserCrudController extends BaseUserCrudController
 
     public function setup(): void
     {
-        CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
+        CRUD::setModel(User::class);
+        CRUD::setRoute(config('backpack.base.route_prefix').'/user');
         CRUD::setEntityNameStrings('user', 'users');
 
         if (!backpack_user()->hasRole('admin')) {
@@ -107,67 +112,6 @@ class UserCrudController extends BaseUserCrudController
          */
     }
 
-    /**
-     * Define what happens when the Update operation is loaded.
-     *
-     * @see https://backpackforlaravel.com/docs/crud-operation-update
-     * @return void
-     */
-    public function setupUpdateOperation(): void
-    {
-        $this->addUserFields();
-        $this->crud->setValidation(UpdateRequest::class);
-    }
-
-    /**
-     * Store a newly created resource in the database.
-     *
-     * @return RedirectResponse
-     */
-
-    public function store(): RedirectResponse
-    {
-        $this->crud->setRequest($this->crud->validateRequest());
-        $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
-        $this->crud->unsetValidation(); // validation has already been run
-
-        return $this->traitStore();
-    }
-
-    /**
-     * Update the specified resource in the database.
-     *
-     * @return RedirectResponse
-     */
-    public function update(): RedirectResponse
-    {
-        $this->crud->setRequest($this->crud->validateRequest());
-        $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
-        $this->crud->unsetValidation(); // validation has already been run
-
-        return $this->traitUpdate();
-    }
-
-    /**
-     * Handle password input fields.
-     */
-    protected function handlePasswordInput($request)
-    {
-        // Remove fields not present on the user.
-        /*$request->request->remove('password_confirmation');
-        $request->request->remove('roles_show');
-        $request->request->remove('permissions_show');*/
-
-        // Encrypt password if specified.
-        if ($request->input('password')) {
-            $request->request->set('password', Hash::make($request->input('password')));
-        } else {
-            $request->request->remove('password');
-        }
-
-        return $request;
-    }
-
     protected function addUserFields(): void
     {
         $this->crud->addFields([
@@ -197,15 +141,16 @@ class UserCrudController extends BaseUserCrudController
                     'label' => trans('backpack::permissionmanager.user_role_permission'),
                     'field_unique_name' => 'user_role_permission',
                     'type' => 'checklist_dependency',
-                    'name' => 'user_role_permission',
+                    'name' => 'roles,permissions',
                     'subfields' => [
                         'primary' => [
                             'label' => trans('backpack::permissionmanager.roles'),
                             'name' => 'roles', // the method that defines the relationship in your Model
                             'entity' => 'roles', // the method that defines the relationship in your Model
-                            'entity_secondary' => 'permissions', // the method that defines the relationship in your Model
+                            'entity_secondary' => 'permissions',
+                            // the method that defines the relationship in your Model
                             'attribute' => 'name', // foreign key attribute that is shown to user
-                            'model' => 'Backpack\PermissionManager\app\Models\Role', // foreign key model
+                            'model' => config('permission.models.role'), // foreign key model
                             'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
                             'number_columns' => 3, //can be 1,2,3,4,6
                         ],
@@ -215,12 +160,74 @@ class UserCrudController extends BaseUserCrudController
                             'entity' => 'permissions', // the method that defines the relationship in your Model
                             'entity_primary' => 'roles', // the method that defines the relationship in your Model
                             'attribute' => 'name', // foreign key attribute that is shown to user
-                            'model' => 'Backpack\PermissionManager\app\Models\Permission', // foreign key model
+                            'model' => config('permission.models.permission'), // foreign key model
                             'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
                             'number_columns' => 3, //can be 1,2,3,4,6
                         ],
                     ],
-                ]]
+                ]
+            ]
         );
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     *
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    public function setupUpdateOperation(): void
+    {
+        $this->addUserFields();
+        $this->crud->setValidation(UpdateRequest::class);
+    }
+
+    /**
+     * Store a newly created resource in the database.
+     *
+     * @return RedirectResponse
+     */
+
+    public function store(): RedirectResponse
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+        $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
+        $this->crud->unsetValidation(); // validation has already been run
+
+        return $this->traitStore();
+    }
+
+    /**
+     * Handle password input fields.
+     */
+    protected function handlePasswordInput($request)
+    {
+        // Remove fields not present on the user.
+        /*$request->request->remove('password_confirmation');
+        $request->request->remove('roles_show');
+        $request->request->remove('permissions_show');*/
+
+        // Encrypt password if specified.
+        if ($request->input('password')) {
+            $request->request->set('password', Hash::make($request->input('password')));
+        } else {
+            $request->request->remove('password');
+        }
+
+        return $request;
+    }
+
+    /**
+     * Update the specified resource in the database.
+     *
+     * @return RedirectResponse
+     */
+    public function update(): RedirectResponse
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+        $this->crud->setRequest($this->handlePasswordInput($this->crud->getRequest()));
+        $this->crud->unsetValidation(); // validation has already been run
+
+        return $this->traitUpdate();
     }
 }

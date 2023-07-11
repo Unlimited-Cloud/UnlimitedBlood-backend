@@ -170,7 +170,7 @@ class RequestsCrudController extends CrudController
             'bloodType' => 'required',
             'address' => 'required',
             'quantity' => 'required',
-            'requestDate' => 'required|datetime',
+            'requestDate' => 'required|date',
             'needByDate' => 'required|after_or_equal:today',
 
         ]);

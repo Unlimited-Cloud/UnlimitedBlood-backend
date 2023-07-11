@@ -32,7 +32,7 @@
     ->content('Use the BloodNepal app for more features like tracking blood pressure, sending blood requests, and more.
     ');
     }
-    if (!backpack_user()->hasRole('donor')) {
+    if (backpack_user()->hasRole('admin')) {
             Widget::add()
     ->to('after_content')
     ->type('progress')
@@ -41,6 +41,40 @@
     ->description('Donors')
     ->progress(DB::table('donors')->count())
     ->hint(100 - DB::table('donors')->count() . ' more donors needed to reach 100');
+    }
+
+    if (backpack_user()->hasRole('organization')) {
+        $totalCamps = DB::table('camps')->count();
+        $userOrganizationCamps = DB::table('camps')
+        ->where('organizationId', backpack_user()->organizations->id)->count();
+        $totalRequests = DB::table('requests')->count();
+        $userOrganizationRequests = DB::table('requests')
+        ->where('fulfilled_by', backpack_user()->organizations->id)->count();
+        [
+        'type'    => 'div',
+        'class'   => 'row',
+        'content' => [ // widgets here
+        [Widget::make()
+    ->group('after_content')
+    ->type('progress')
+    ->class('card text-white bg-red mb-2')
+    ->value(DB::table('requests')->where('fulfilled_by', backpack_user()->organizations->id)->count())
+    ->description('Requests')
+    ->progress($userOrganizationRequests / $totalRequests * 100)
+    ->hint($userOrganizationRequests / $totalRequests * 100 . '% of requests fulfilled by your organization')],
+        [Widget::make()
+    ->group('after_content')
+    ->type('progress')
+    ->class('card text-white bg-red mb-2')
+    ->value(DB::table('camps')->where('organizationId', backpack_user()->organizations->id)->count())
+    ->description('Camps')
+    ->progress($userOrganizationCamps / $totalCamps * 100)
+    ->hint($userOrganizationCamps / $totalCamps * 100 . '% of camps organized by your organization')
+        ],
+        [ 'type' => 'card', 'content' => ['body' => 'Three'] ],
+        ]];
+
+
     }
 
 @endphp

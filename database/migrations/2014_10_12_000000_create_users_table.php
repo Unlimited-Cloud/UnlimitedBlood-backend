@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->string('mname')->nullable();
             $table->string('lname');
             $table->string('password');
-            $table->string('bloodType');
+            $table->string('bloodGroup');
             $table->string('address');
             $table->string('gender');
             $table->date('birthDate');
@@ -77,8 +77,8 @@ return new class extends Migration {
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber');
-            $table->string('bloodType');
-            $table->string('donationType')->nullable();
+            $table->string('bloodGroup');
+            $table->string('bloodType')->nullable();
             $table->integer('quantity');
             $table->date('donationDate');
             $table->unsignedBigInteger('organizationId');
@@ -98,8 +98,8 @@ return new class extends Migration {
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('organizationId');
+            $table->string('bloodGroup');
             $table->string('bloodType');
-            $table->string('donationType');
             $table->integer('quantity');
             $table->integer('price');
             $table->timestamps();
@@ -117,8 +117,8 @@ return new class extends Migration {
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->string('phoneNumber');
+            $table->string('bloodGroup');
             $table->string('bloodType');
-            $table->string('donationType');
             $table->integer('quantity');
             $table->dateTime('requestDate');
             $table->dateTime('needByDate');

@@ -24,8 +24,8 @@ class Requests extends Model
     protected $fillable = [
 
         'phoneNumber',
+        'bloodGroup',
         'bloodType',
-        'donationType',
         'quantity',
         'requestDate',
         'needByDate',

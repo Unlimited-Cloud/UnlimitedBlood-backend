@@ -60,8 +60,8 @@ class DonationsCrudController extends CrudController
         }
 
         CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
+        CRUD::column('bloodGroup')->label('Blood Group');
         CRUD::column('bloodType')->label('Blood Type');
-        CRUD::column('donationType')->label('Donation Type');
         CRUD::column('quantity')->label('Quantity (ml)');
         CRUD::column('donationDate')->label('Date')->type('date');
         if (backpack_user()->hasRole('admin')) {
@@ -113,8 +113,8 @@ class DonationsCrudController extends CrudController
     {
         $this->crud->setValidation([
             'phoneNumber' => 'required|numeric',
+            'bloodGroup' => 'required',
             'bloodType' => 'required',
-            'donationType' => 'required',
             'quantity' => 'required|numeric',
             'donationDate' => 'required|date',
             'upperBP' => 'required|numeric',
@@ -139,8 +139,8 @@ class DonationsCrudController extends CrudController
         ]);
         CRUD::field('phoneNumber')->label('Mobile Number')->type('number');
         CRUD::addField([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
+            'name' => 'bloodGroup',
+            'label' => 'Blood Group',
             'type' => 'enum',
             'options' => [
                 'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
@@ -148,8 +148,8 @@ class DonationsCrudController extends CrudController
             ],
         ]);
         CRUD::addField([
-            'name' => 'donationType',
-            'label' => 'Donation Type',
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
             'type' => 'enum',
             'options' => [
                 'Whole Blood' => 'Whole Blood', 'Platelets' => 'Platelets', 'Plasma' => 'Plasma'

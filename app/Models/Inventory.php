@@ -23,8 +23,8 @@ class Inventory extends Model
     protected $fillable = [
 
         'organizationId',
+        'bloodGroup',
         'bloodType',
-        'donationType',
         'quantity',
         'price'
 

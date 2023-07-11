@@ -53,8 +53,8 @@ class TestDataSeeder extends Seeder
 
         Inventory::factory()->create([
             'organizationId' => 1,
-            'bloodType' => 'A+',
-            'donationType' => 'Whole Blood',
+            'bloodGroup' => 'A+',
+            'bloodType' => 'Whole Blood',
             'quantity' => 100,
             'price' => 100
 
@@ -63,8 +63,8 @@ class TestDataSeeder extends Seeder
         Inventory::factory()->create([
 
             'organizationId' => 2,
-            'bloodType' => 'B+',
-            'donationType' => 'Whole Blood',
+            'bloodGroup' => 'B+',
+            'bloodType' => 'Whole Blood',
             'quantity' => 200,
             'price' => 200
 

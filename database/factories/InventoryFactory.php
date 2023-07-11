@@ -18,8 +18,8 @@ class InventoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'bloodType' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
-            'donationType' => fake()->randomElement(['Whole Blood', 'Plasma', 'Platelets']),
+            'bloodGroup' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'bloodType' => fake()->randomElement(['Whole Blood', 'Plasma', 'Platelets']),
             'quantity' => fake()->numberBetween(1, 1000),
             'price' => fake()->numberBetween(1, 1000),
         ];

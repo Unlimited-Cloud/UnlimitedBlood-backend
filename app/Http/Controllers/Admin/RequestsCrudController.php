@@ -64,8 +64,8 @@ class RequestsCrudController extends CrudController
         }
 
         CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
+        CRUD::column('bloodGroup')->label('Blood Group');
         CRUD::column('bloodType')->label('Blood Type');
-        CRUD::column('donationType')->label('Donation Type');
         CRUD::column('quantity')->label('Quantity (ml)')->type('number');
         CRUD::column('requestDate')->label('Request Date')->type('datetime');
         CRUD::column('needByDate')->label('Need By Date')->type('datetime');
@@ -90,8 +90,8 @@ class RequestsCrudController extends CrudController
     {
         $this->crud->setValidation([
             'phoneNumber' => 'required',
-            'donationType' => 'required',
             'bloodType' => 'required',
+            'bloodGroup' => 'required',
             'address' => 'required',
             'quantity' => 'required|numeric|min:1',
             'requestDate' => 'required|date',
@@ -122,8 +122,8 @@ class RequestsCrudController extends CrudController
             ]
         ]);
         CRUD::addField([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
+            'name' => 'bloodGroup',
+            'label' => 'Blood Group',
             'type' => 'enum',
             'options' => [
                 'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
@@ -133,8 +133,8 @@ class RequestsCrudController extends CrudController
 
         ]);
         CRUD::addField([
-            'name' => 'donationType',
-            'label' => 'Donation Type',
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
             'type' => 'enum',
 
             'options' => [
@@ -167,7 +167,7 @@ class RequestsCrudController extends CrudController
 
         $this->crud->setValidation([
             'phoneNumber' => 'required',
-            'donationType' => 'required',
+            'bloodType' => 'required',
             'address' => 'required',
             'quantity' => 'required',
             'requestDate' => 'required|datetime',
@@ -180,8 +180,8 @@ class RequestsCrudController extends CrudController
 
         if (backpack_user()->hasRole('organization')) {
             CRUD::addField([
-                'name' => 'bloodType',
-                'label' => 'Blood Type',
+                'name' => 'bloodGroup',
+                'label' => 'Blood Group',
                 'attributes' => [
                     'disabled' => 'disabled',
                 ],
@@ -193,7 +193,7 @@ class RequestsCrudController extends CrudController
                 'allows_null' => false,
 
             ]);
-            CRUD::field('donationType')->attributes(["readonly" => "readonly"])->label('Donation Type');
+            CRUD::field('bloodType')->attributes(["readonly" => "readonly"])->label('Blood Type');
             CRUD::field('quantity')->attributes(["readonly" => "readonly"])->label('Quantity (ml)');
             CRUD::field('needByDate')->attributes(["readonly" => "readonly"])->label('Need By Date');
             CRUD::field('address')->attributes(["readonly" => "readonly"]);
@@ -213,8 +213,8 @@ class RequestsCrudController extends CrudController
                 ]);
         } else {
             CRUD::addField([
-                'name' => 'bloodType',
-                'label' => 'Blood Type',
+                'name' => 'bloodGroup',
+                'label' => 'Blood Group',
                 'type' => 'enum',
                 'options' => [
                     'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
@@ -223,7 +223,7 @@ class RequestsCrudController extends CrudController
                 'allows_null' => false,
 
             ]);
-            CRUD::field('donationType')->label('Donation Type');
+            CRUD::field('bloodType')->label('Blood Type');
             CRUD::field('quantity')->label('Quantity (ml)');
             CRUD::field('needByDate')->label('Need By Date')->type('datetime');
             CRUD::field('address');
@@ -235,8 +235,8 @@ class RequestsCrudController extends CrudController
             if ($request->fulfilled_by != null) {
                 $inventory = Inventory::where([
                     ['organizationId', '=', backpack_user()->organizations->id],
+                    ['bloodGroup', '=', $request->bloodGroup],
                     ['bloodType', '=', $request->bloodType],
-                    ['donationType', '=', $request->donationType],
                     ['quantity', '>=', $request->quantity]
                 ])
                     ->first();

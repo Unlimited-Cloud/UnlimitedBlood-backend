@@ -22,7 +22,7 @@ class DonorFactory extends Factory
             'fname' => fake()->firstName(),
             'lname' => fake()->lastName(),
             'password' => bcrypt('password'),
-            'bloodType' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'bloodGroup' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'address' => fake()->address(),
             'gender' => fake()->randomElement(['Male', 'Female', 'Other']),
             'birthDate' => fake()->date(),

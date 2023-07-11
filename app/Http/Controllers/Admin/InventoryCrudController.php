@@ -70,8 +70,8 @@ class InventoryCrudController extends CrudController
 
             ]);
         }
+        CRUD::column('bloodGroup')->label('Blood Group');
         CRUD::column('bloodType')->label('Blood Type');
-        CRUD::column('donationType')->label('Donation Type');
         CRUD::column('quantity')->label('Quantity (ml)');
         CRUD::column('price')->label('Price (Rs)');
         CRUD::column('updated_at')->label('Last Updated');
@@ -103,8 +103,8 @@ class InventoryCrudController extends CrudController
     protected function setupCreateOperation(): void
     {
         $this->crud->setValidation([
+            'bloodGroup' => 'required',
             'bloodType' => 'required',
-            'donationType' => 'required',
             'quantity' => 'required',
             'price' => 'required',
 
@@ -119,8 +119,8 @@ class InventoryCrudController extends CrudController
             'default' => backpack_user()->organizations->id,
         ]);
         CRUD::addField([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
+            'name' => 'bloodGroup',
+            'label' => 'Blood Group',
             'type' => 'enum',
             'options' => [
                 'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
@@ -129,8 +129,8 @@ class InventoryCrudController extends CrudController
             'allows_null' => false,
         ]);
         CRUD::addField([
-            'name' => 'donationType',
-            'label' => 'Donation Type',
+            'name' => 'bloodType',
+            'label' => 'Blood Type',
             'type' => 'enum',
 
             'options' => [

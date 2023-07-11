@@ -66,8 +66,8 @@ class DonorCrudController extends CrudController
         //CRUD::column('mname');
         CRUD::column('lname');
         CRUD::addColumn([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
+            'name' => 'bloodGroup',
+            'label' => 'Blood Group',
             'type' => 'enum',
             'options' => [
                 'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
@@ -112,8 +112,8 @@ class DonorCrudController extends CrudController
         CRUD::field('lname')->type('text');
         CRUD::field('password');
         CRUD::addField([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
+            'name' => 'bloodGroup',
+            'label' => 'Blood Group',
             'type' => 'enum',
             'options' => [
                 'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',

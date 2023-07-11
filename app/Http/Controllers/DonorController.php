@@ -31,7 +31,7 @@ class DonorController
 
             return response()->json([
                 'success' => true, 'fname' => $user['fname'], 'mname' => $user['mname'], 'lname' => $user['lname'],
-                'bloodType' => $user['bloodType'], 'birthDate' => $user['birthDate'], 'gender' => $user['gender'],
+                'bloodGroup' => $user['bloodGroup'], 'birthDate' => $user['birthDate'], 'gender' => $user['gender'],
                 'email' => $user['email'], 'address' => $user['address']
             ]);
         } catch (Exception $e) {
@@ -65,7 +65,7 @@ class DonorController
         $fname = $request->input('fname');
         $mname = $request->input('mname');
         $lname = $request->input('lname');
-        $bloodType = $request->input('bloodType');
+        $bloodGroup = $request->input('bloodGroup');
         $birthDate = $request->input('birthDate');
         $email = $request->input('email');
         $address = $request->input('address');
@@ -79,7 +79,7 @@ class DonorController
             $user->fname = $fname;
             $user->mname = $mname;
             $user->lname = $lname;
-            $user->bloodType = $bloodType;
+            $user->bloodGroup = $bloodGroup;
             $user->birthDate = $birthDate;
             $user->email = $email;
             $user->address = $address;

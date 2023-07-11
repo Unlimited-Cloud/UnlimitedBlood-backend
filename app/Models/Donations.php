@@ -25,8 +25,8 @@ class Donations extends Model
     protected $fillable = [
 
         'phoneNumber',
+        'bloodGroup',
         'bloodType',
-        'donationType',
         'quantity',
         'donationDate',
         'organizationId',

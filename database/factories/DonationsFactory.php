@@ -18,9 +18,9 @@ class DonationsFactory extends Factory
     public function definition(): array
     {
         return [
-            'donationType' => fake()->randomElement(['Blood', 'Plasma', 'Platelets']),
+            'bloodType' => fake()->randomElement(['Blood', 'Plasma', 'Platelets']),
             'quantity' => fake()->randomDigit(),
-            'bloodType' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'bloodGroup' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'donationDate' => fake()->date(),
             'upperBP' => fake()->randomDigit(),
             'lowerBP' => fake()->randomDigit(),

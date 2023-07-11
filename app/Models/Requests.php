@@ -35,7 +35,7 @@ class Requests extends Model
     protected $casts = [
         'fulfilled_by' => 'integer',
         'quantity' => 'integer',
-        'requestDate' => 'date:Y-m-d',
+        'requestDate' => 'date:Y-m-d-H:i:s',
         'needByDate' => 'date:Y-m-d-H:i:s',
     ];
     // protected $hidden = [];

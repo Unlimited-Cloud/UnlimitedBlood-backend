@@ -63,7 +63,7 @@ class DonationsCrudController extends CrudController
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');
         CRUD::column('quantity')->label('Quantity (ml)');
-        CRUD::column('donationDate')->label('Date');
+        CRUD::column('donationDate')->label('Date')->type('date');
         if (backpack_user()->hasRole('admin')) {
             CRUD::addColumn([
                 'name' => 'organizationId',

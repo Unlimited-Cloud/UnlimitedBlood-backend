@@ -67,7 +67,7 @@ class RequestsCrudController extends CrudController
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');
         CRUD::column('quantity')->label('Quantity (ml)')->type('number');
-        CRUD::column('requestDate')->label('Request Date')->type('date');
+        CRUD::column('requestDate')->label('Request Date')->type('datetime');
         CRUD::column('needByDate')->label('Need By Date')->type('datetime');
         CRUD::column('address');
         CRUD::column('fulfilled_by');
@@ -115,8 +115,8 @@ class RequestsCrudController extends CrudController
         CRUD::addField([
             'name' => 'requestDate',
             'label' => 'Request Date',
-            'type' => 'date',
-            'value' => Carbon::today(),
+            'type' => 'datetime',
+            'value' => Carbon::now(),
             'attributes' => [
                 'readonly' => 'readonly'
             ]
@@ -170,7 +170,7 @@ class RequestsCrudController extends CrudController
             'donationType' => 'required',
             'address' => 'required',
             'quantity' => 'required',
-            'requestDate' => 'required|date',
+            'requestDate' => 'required|datetime',
             'needByDate' => 'required|after_or_equal:today',
 
         ]);

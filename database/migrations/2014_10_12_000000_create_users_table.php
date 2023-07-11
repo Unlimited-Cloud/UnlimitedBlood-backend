@@ -120,8 +120,8 @@ return new class extends Migration {
             $table->string('bloodType');
             $table->string('donationType');
             $table->integer('quantity');
-            $table->date('requestDate');
-            $table->date('needByDate');
+            $table->dateTime('requestDate');
+            $table->dateTime('needByDate');
             $table->string('address');
             $table->unsignedBigInteger('fulfilled_by')->nullable();
             $table->timestamps();

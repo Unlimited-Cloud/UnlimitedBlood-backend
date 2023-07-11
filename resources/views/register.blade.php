@@ -33,7 +33,7 @@
 
                             <div>
                                 <input
-                                    type="{{ backpack_authentication_column()==backpack_email_column()?'phoneNumber':'text'}}"
+                                    type="{{ backpack_authentication_column()==backpack_email_column()?'email':'numeric'}}"
                                     class="form-control{{ $errors->has(backpack_authentication_column()) ? ' is-invalid' : '' }}"
                                     name="{{ backpack_authentication_column() }}"
                                     id="{{ backpack_authentication_column() }}"

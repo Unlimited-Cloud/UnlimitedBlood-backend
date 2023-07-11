@@ -33,7 +33,7 @@ class RegisterController extends BackpackRegisterController
 
         return Validator::make($data, [
             'name' => 'required|max:255',
-            backpack_authentication_column() => 'required|'.$phoneNumber_validation.'min:10|unique:'.$users_table,
+            backpack_authentication_column() => 'required|'.$phoneNumber_validation.'digits:10|unique:'.$users_table,
             'email' => 'required',
             'address' => 'required',
             'website' => 'nullable|url',

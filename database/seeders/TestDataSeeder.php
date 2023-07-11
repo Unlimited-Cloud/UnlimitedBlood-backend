@@ -18,13 +18,13 @@ class TestDataSeeder extends Seeder
         Organizations::factory()->create([
             'name' => 'Test Organization1',
             'phoneNumber' => '3333333333',
-            'user_id' => 4,
+            'user_id' => 6,
         ]);
 
         Organizations::factory()->create([
             'name' => 'Test Organization2',
             'phoneNumber' => '2222222222',
-            'user_id' => 5,
+            'user_id' => 7,
         ]);
 
         Donor::factory()->create([
@@ -37,6 +37,18 @@ class TestDataSeeder extends Seeder
             'phoneNumber' => '1111111111',
             'password' => bcrypt('password'),
             'user_id' => 3
+        ]);
+
+        Donor::factory()->create([
+            'phoneNumber' => '1212121212',
+            'password' => bcrypt('password'),
+            'user_id' => 4
+        ]);
+
+        Donor::factory()->create([
+            'phoneNumber' => '2323232323',
+            'password' => bcrypt('password'),
+            'user_id' => 5
         ]);
 
         Inventory::factory()->create([

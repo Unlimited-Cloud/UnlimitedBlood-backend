@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-
         });
 
         Schema::create('donors', function (Blueprint $table) {
@@ -47,10 +46,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id')->unique();
             $table->string('email')->unique();
             $table->string('name');
+            $table->decimal('latitude', 12, 8);
+            $table->decimal('longitude', 12, 8);
             $table->string('address');
             $table->string('website')->nullable();
             $table->binary('logo')->nullable();
-            $table->boolean('loginStatus')->default(false);
             $table->rememberToken();
             $table->timestamps();
 
@@ -62,6 +62,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('organizationId');
             $table->string('name');
             $table->string('address');
+            $table->decimal('latitude', 12, 8);
+            $table->decimal('longitude', 12, 8);
             $table->dateTime('startDate');
             $table->dateTime('endDate');
             $table->integer('attendees')->nullable();
@@ -119,6 +121,7 @@ return new class extends Migration {
             $table->string('donationType');
             $table->integer('quantity');
             $table->date('requestDate');
+            $table->date('needByDate');
             $table->string('address');
             $table->unsignedBigInteger('fulfilled_by')->nullable();
             $table->timestamps();

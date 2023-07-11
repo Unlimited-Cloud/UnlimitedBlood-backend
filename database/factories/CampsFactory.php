@@ -21,6 +21,8 @@ class CampsFactory extends Factory
             'name' => fake()->name(),
             'address' => fake()->address(),
             'startDate' => fake()->date(),
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
             'endDate' => fake()->date(),
             'attendees' => 0,
             'pictures' => fake()->imageUrl(),

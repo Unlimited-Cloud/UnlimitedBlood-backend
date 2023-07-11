@@ -31,6 +31,8 @@ class Organizations extends Model
         'email',
         'name',
         'address',
+        'latitude',
+        'longitude',
         'logo',
         'user_id'
 

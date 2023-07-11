@@ -72,18 +72,32 @@ class PermissionsSeeder extends Seeder
         $user3->assignRole($donor);
 
         $user4 = User::factory()->create([
+            'name' => 'Test Donor3',
+            'phoneNumber' => '1212121212',
+            'password' => bcrypt('password'),
+        ]);
+        $user4->assignRole($donor);
+
+        $user5 = User::factory()->create([
+            'name' => 'Test Donor4',
+            'phoneNumber' => '2323232323',
+            'password' => bcrypt('password'),
+        ]);
+        $user5->assignRole($donor);
+
+        $user6 = User::factory()->create([
             'name' => 'Test Organization1',
             'phoneNumber' => '3333333333',
             'password' => bcrypt('password'),
         ]);
-        $user4->assignRole($organization);
+        $user6->assignRole($organization);
 
-        $user5 = User::factory()->create([
+        $user7 = User::factory()->create([
             'name' => 'Test Organization2',
             'phoneNumber' => '2222222222',
             'password' => bcrypt('password'),
         ]);
-        $user5->assignRole($organization);
+        $user7->assignRole($organization);
 
     }
 }

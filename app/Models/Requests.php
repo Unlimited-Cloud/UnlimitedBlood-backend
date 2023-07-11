@@ -28,12 +28,15 @@ class Requests extends Model
         'donationType',
         'quantity',
         'requestDate',
+        'needByDate',
         'address',
         'fulfilled_by',
     ];
     protected $casts = [
         'fulfilled_by' => 'integer',
         'quantity' => 'integer',
+        'requestDate' => 'date:Y-m-d',
+        'needByDate' => 'date:Y-m-d-H:i:s',
     ];
     // protected $hidden = [];
     // protected $dates = [];

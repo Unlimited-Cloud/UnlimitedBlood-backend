@@ -13,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
 use Prologue\Alerts\Facades\Alert;
 
 /**
@@ -36,17 +37,11 @@ class RequestsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Requests::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
+        CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
-        if (backpack_user()->hasRole('donor')) {
-            $this->crud->denyAccess(['delete', 'create', 'update']);
-        }
         if (backpack_user()->hasRole('organization')) {
             $this->crud->denyAccess(['delete', 'create']);
-        }
-        if (backpack_user()->hasRole('admin')) {
-            $this->crud->denyAccess(['create', 'update']);
         }
     }
 
@@ -61,18 +56,19 @@ class RequestsCrudController extends CrudController
         if (backpack_user()->hasRole('donor')) {
             $user_number = backpack_user()->phoneNumber;
             $this->crud->addClause('where', 'phoneNumber', '=', $user_number);
-        }
-
-        if (backpack_user()->hasRole('organization')) {
-            $user_organization_id = backpack_user()->organizations->id;
             $this->crud->addClause('where', 'fulfilled_by', '=', null);
         }
 
-        CRUD::column('phoneNumber')->label('Mobile Number');
+        if (backpack_user()->hasRole('organization')) {
+            $this->crud->addClause('where', 'fulfilled_by', '=', null);
+        }
+
+        CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
         CRUD::column('bloodType')->label('Blood Type');
         CRUD::column('donationType')->label('Donation Type');
-        CRUD::column('quantity')->label('Quantity (ml)');
-        CRUD::column('requestDate')->label('Request Date');
+        CRUD::column('quantity')->label('Quantity (ml)')->type('number');
+        CRUD::column('requestDate')->label('Request Date')->type('date');
+        CRUD::column('needByDate')->label('Need By Date')->type('datetime');
         CRUD::column('address');
         CRUD::column('fulfilled_by');
 
@@ -89,14 +85,50 @@ class RequestsCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
+    // Only for donors
     protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber')->label('Mobile Number');
+        $this->crud->setValidation([
+            'phoneNumber' => 'required',
+            'donationType' => 'required',
+            'bloodType' => 'required',
+            'address' => 'required',
+            'quantity' => 'required|numeric|min:1',
+            'requestDate' => 'required|date',
+            'needByDate' => 'required|after_or_equal:today',
+
+        ]);
+
+        if (backpack_user()->hasRole('donor')) {
+            CRUD::addField([
+                'name' => 'phoneNumber',
+                'label' => 'Mobile Number',
+                'default' => backpack_user()->phoneNumber,
+                'attributes' => [
+                    'readonly' => 'readonly'
+                ]
+            ]);
+        } else {
+            CRUD::field('phoneNumber')->label('Mobile Number');
+        }
+
+        CRUD::addField([
+            'name' => 'requestDate',
+            'label' => 'Request Date',
+            'type' => 'date',
+            'value' => Carbon::today(),
+            'attributes' => [
+                'readonly' => 'readonly'
+            ]
+        ]);
         CRUD::addField([
             'name' => 'bloodType',
             'label' => 'Blood Type',
             'type' => 'enum',
-            'options' => ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'options' => [
+                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+            ],
             'allows_null' => false,
 
         ]);
@@ -111,7 +143,7 @@ class RequestsCrudController extends CrudController
 
         ]);
         CRUD::field('quantity')->label('Quantity (ml)')->type('number');
-        CRUD::field('requestDate')->label('Request Date');
+        CRUD::field('needByDate')->label('Need By Date')->type('datetime');
         CRUD::field('address');
         if (backpack_user()->hasRole('admin')) {
             CRUD::field('fulfilled_by');
@@ -138,52 +170,75 @@ class RequestsCrudController extends CrudController
             'donationType' => 'required',
             'address' => 'required',
             'quantity' => 'required',
-            'requestDate' => 'required',
+            'requestDate' => 'required|date',
+            'needByDate' => 'required|after_or_equal:today',
 
         ]);
 
         CRUD::field('phoneNumber')->attributes(["readonly" => "readonly"])->label('Mobile Number');
-        CRUD::addField([
-            'name' => 'bloodType',
-            'label' => 'Blood Type',
-            'attributes' => [
-                'disabled' => 'disabled',
-            ],
-            'type' => 'enum',
-            'options' => [
-                'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
-                'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
-            ],
-            'allows_null' => false,
-
-        ]);
-        CRUD::field('donationType')->attributes(["readonly" => "readonly"])->label('Donation Type');
-        CRUD::field('quantity')->attributes(["readonly" => "readonly"])->label('Quantity (ml)');
         CRUD::field('requestDate')->attributes(["readonly" => "readonly"])->label('Request Date');
-        CRUD::field('address')->attributes(["readonly" => "readonly"]);
-        CRUD::addField(
-            [
-                'name' => 'fulfilled_by',
-                'label' => 'Fulfilled?',
-                'type' => 'radio',
-                'model' => "App\Models\User",
-                'options' => [
-                    backpack_user()->organizations->id => 'Yes',
-                    null => 'No'
 
+        if (backpack_user()->hasRole('organization')) {
+            CRUD::addField([
+                'name' => 'bloodType',
+                'label' => 'Blood Type',
+                'attributes' => [
+                    'disabled' => 'disabled',
                 ],
-                'allows_null' => true,
-                'default' => null,
+                'type' => 'enum',
+                'options' => [
+                    'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                    'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+                ],
+                'allows_null' => false,
+
             ]);
+            CRUD::field('donationType')->attributes(["readonly" => "readonly"])->label('Donation Type');
+            CRUD::field('quantity')->attributes(["readonly" => "readonly"])->label('Quantity (ml)');
+            CRUD::field('needByDate')->attributes(["readonly" => "readonly"])->label('Need By Date');
+            CRUD::field('address')->attributes(["readonly" => "readonly"]);
+            CRUD::addField(
+                [
+                    'name' => 'fulfilled_by',
+                    'label' => 'Fulfilled?',
+                    'type' => 'radio',
+                    'model' => "App\Models\User",
+                    'options' => [
+                        backpack_user()->organizations->id => 'Yes',
+                        null => 'No'
+
+                    ],
+                    'allows_null' => true,
+                    'default' => null,
+                ]);
+        } else {
+            CRUD::addField([
+                'name' => 'bloodType',
+                'label' => 'Blood Type',
+                'type' => 'enum',
+                'options' => [
+                    'A+' => 'A+', 'A-' => 'A-', 'B+' => 'B+', 'B-' => 'B-',
+                    'AB+' => 'AB+', 'AB-' => 'AB-', 'O+' => 'O+', 'O-' => 'O-'
+                ],
+                'allows_null' => false,
+
+            ]);
+            CRUD::field('donationType')->label('Donation Type');
+            CRUD::field('quantity')->label('Quantity (ml)');
+            CRUD::field('needByDate')->label('Need By Date')->type('datetime');
+            CRUD::field('address');
+        }
 
         Requests::updating(function (Requests $request) {
 
 
             if ($request->fulfilled_by != null) {
-                $inventory = Inventory::where([['organizationId', '=', backpack_user()->organizations->id],
+                $inventory = Inventory::where([
+                    ['organizationId', '=', backpack_user()->organizations->id],
                     ['bloodType', '=', $request->bloodType],
                     ['donationType', '=', $request->donationType],
-                    ['quantity', '>=', $request->quantity]])
+                    ['quantity', '>=', $request->quantity]
+                ])
                     ->first();
 
                 if ($inventory == null) {

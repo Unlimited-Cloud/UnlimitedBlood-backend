@@ -21,6 +21,7 @@ class RequestsFactory extends Factory
             'bloodType' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'donationType' => fake()->randomElement(['Whole Blood', 'Plasma', 'Platelets']),
             'quantity' => fake()->numberBetween(1, 1000),
+            'needByDate' => fake()->date(),
             'requestDate' => fake()->date(),
             'address' => fake()->address(),
         ];

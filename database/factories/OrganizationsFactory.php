@@ -20,6 +20,8 @@ class OrganizationsFactory extends Factory
         return [
             'email' => fake()->unique()->safeEmail(),
             'name' => fake()->name(),
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
             'address' => fake()->address(),
             'logo' => fake()->imageUrl(),
         ];

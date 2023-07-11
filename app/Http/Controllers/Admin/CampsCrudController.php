@@ -80,8 +80,8 @@ class CampsCrudController extends CrudController
 
         ]);
         CRUD::column('address');
-        CRUD::column('startDate')->label('Start Date');
-        CRUD::column('endDate')->label('End Date');
+        CRUD::column('startDate')->label('Start Date')->type('datetime');
+        CRUD::column('endDate')->label('End Date')->type('datetime');
         CRUD::column('attendees');
         CRUD::column('pictures')->type('image');
 

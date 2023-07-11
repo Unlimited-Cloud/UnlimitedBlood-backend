@@ -9,7 +9,7 @@
     } else {
         $widgets['before_content'][] = [
             'type'        => 'jumbotron',
-            'heading'     => trans('backpack::base.welcome'),
+            'heading'     => 'Welcome ' . backpack_user()->name,
             'content'     => 'Welcome to the admin panel. Please use the menu on the left to navigate.',
             'button_link' => backpack_url('logout'),
             'button_text' => trans('backpack::base.logout'),
@@ -32,7 +32,7 @@
     ->content('Use the BloodNepal app for more features like tracking blood pressure, sending blood requests, and more.
     ');
     }
-    if (!backpack_user()->hasRole('organization')) {
+    if (!backpack_user()->hasRole('donor')) {
             Widget::add()
     ->to('after_content')
     ->type('progress')

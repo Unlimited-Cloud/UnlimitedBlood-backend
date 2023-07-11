@@ -29,6 +29,8 @@ class Camps extends Model
         'address',
         'startDate',
         'endDate',
+        'latitude',
+        'longitude',
         'attendees',
         'pictures'
 

@@ -61,7 +61,7 @@
     ->value(DB::table('requests')->where('fulfilled_by', backpack_user()->organizations->id)->count())
     ->description('Requests')
     ->progress($userOrganizationRequests / $totalRequests * 100)
-    ->hint($userOrganizationRequests / $totalRequests * 100 . '% of requests fulfilled by your organization')],
+    ->hint(number_format($userOrganizationRequests / $totalRequests * 100, 2) . '% of requests fulfilled by your organization.')],
         [Widget::make()
     ->group('after_content')
     ->type('progress')
@@ -69,7 +69,7 @@
     ->value(DB::table('camps')->where('organizationId', backpack_user()->organizations->id)->count())
     ->description('Camps')
     ->progress($userOrganizationCamps / $totalCamps * 100)
-    ->hint($userOrganizationCamps / $totalCamps * 100 . '% of camps organized by your organization')
+    ->hint(number_format($userOrganizationCamps / $totalCamps * 100, 2) . '% of camps organized by your organization.')
         ],
         [ 'type' => 'card', 'content' => ['body' => 'Three'] ],
         ]];

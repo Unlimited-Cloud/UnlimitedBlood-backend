@@ -17,6 +17,7 @@ class DonorController
         $password = $request->input('password');
         try {
             $user = Donor::where('phoneNumber', $phoneNumber)->first();
+            $totalDonations = DB::table('donations')->where('phoneNumber', $user->phoneNumber)->count();
 
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -32,7 +33,7 @@ class DonorController
             return response()->json([
                 'success' => true, 'fname' => $user['fname'], 'mname' => $user['mname'], 'lname' => $user['lname'],
                 'bloodGroup' => $user['bloodGroup'], 'birthDate' => $user['birthDate'], 'gender' => $user['gender'],
-                'email' => $user['email'], 'address' => $user['address']
+                'email' => $user['email'], 'address' => $user['address'], 'totalDonations' => $totalDonations
             ]);
         } catch (Exception $e) {
             return response()->json(['error' => 'An error occurred', 'exception' => $e], 500);

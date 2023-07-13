@@ -8,9 +8,9 @@ This is the backend of the BloodNepal project. This project is made using:
 
 # Screenshots
 
-![Admin Panel]()
+![Admin Panel Screenshot.png](resources%2Fscreenshots%2FAdmin%20Panel%20Screenshot.png)
 <br><br>
-![Organization Panel]()
+![Organizer Panel Screenshot.png](resources%2Fscreenshots%2FOrganization%20Panel%20Screenshot.png)
 
 ## Laravel Introduction
 

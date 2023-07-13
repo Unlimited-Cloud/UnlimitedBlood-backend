@@ -95,17 +95,17 @@
                                     @endphp
                                     <label class="required">{{ $label }}</label>
                                     <input required class="form-control" type="email" name="{{ $field }}"
-                                           value="{{ old($field) ? old($field) : backpack_user()->organizations->$field }}">
+                                           value="{{ old($field) ? old($field) : backpack_user()->organization->$field }}">
                                 </div>
 
                                 <div class="col-md-6 form-group">
                                     @php
-                                        $label = 'Website';
+                                        $label = 'Organization Website';
                                         $field = 'website';
                                     @endphp
                                     <label>{{ $label }}</label>
                                     <input class="form-control" type="url" name="{{ $field }}"
-                                           value="{{ old($field) ? old($field) : backpack_user()->organizations->$field }}">
+                                           value="{{ old($field) ? old($field) : backpack_user()->organization->$field }}">
 
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                                     @endphp
                                     <label class="required">{{ $label }}</label>
                                     <input required class="form-control" type="email" name="{{ $field }}"
-                                           value="{{ old($field) ? old($field) : backpack_user()->donors->$field }}">
+                                           value="{{ old($field) ? old($field) : backpack_user()->donor->$field }}">
                                 </div>
                             </div>
                         @endif

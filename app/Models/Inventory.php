@@ -43,7 +43,7 @@ class Inventory extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function organizations(): BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organizations::class, 'organizationId');
     }

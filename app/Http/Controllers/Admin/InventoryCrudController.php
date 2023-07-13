@@ -55,17 +55,17 @@ class InventoryCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        if (backpack_user()->hasRole('organization')) {
-            $user_organization_id = backpack_user()->organizations->id;
-            $this->crud->addClause('where', 'organizationId', '=', $user_organization_id);
+        if (backpack_user()->hasRole('organizer')) {
+            $this->crud->addClause('where', 'organizationId', '=', backpack_user()->organizationId);
         }
         CRUD::column('id')->label('ID');
+
         if (backpack_user()->hasRole('admin')) {
             CRUD::addColumn([
                 'name' => 'organizationId',
                 'label' => 'Organization',
                 'model' => 'App\Models\Organizations',
-                'entity' => 'organizations',
+                'entity' => 'organization',
                 'attribute' => 'name',
 
             ]);
@@ -113,10 +113,8 @@ class InventoryCrudController extends CrudController
         CRUD::addField([
             'name' => 'organizationId',
             'label' => 'Organization ID',
-            'attributes' => [
-                'readonly' => 'readonly'
-            ],
-            'default' => backpack_user()->organizations->id,
+            'type' => 'hidden',
+            'default' => backpack_user()->organizationId,
         ]);
         CRUD::addField([
             'name' => 'bloodGroup',

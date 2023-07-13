@@ -5,7 +5,6 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -34,7 +33,6 @@ class Organizations extends Model
         'latitude',
         'longitude',
         'logo',
-        'user_id'
 
     ];
     // protected $hidden = [];
@@ -49,9 +47,9 @@ class Organizations extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function user(): BelongsTo
+    public function user(): hasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class, 'organizationId', 'id');
     }
 
     public function donations(): HasMany

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'name',
         'phoneNumber',
         'password',
+        'organizationId',
     ];
 
     /**
@@ -53,9 +55,9 @@ class User extends Authenticatable
         return $this->hasOne(Donor::class);
     }
 
-    public function organizations(): HasOne
+    public function organization(): BelongsTo
     {
-        return $this->hasOne(Organizations::class);
+        return $this->belongsTo(Organizations::class, 'organizationId', 'id');
     }
 
 

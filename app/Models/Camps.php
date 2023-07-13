@@ -38,7 +38,7 @@ class Camps extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    public function organizations(): BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organizations::class, 'organizationId');
     }

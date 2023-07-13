@@ -37,7 +37,7 @@ class DonationsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix').'/donations');
         CRUD::setEntityNameStrings('donations', 'donations');
 
-        if (!backpack_user()->hasRole('organization')) {
+        if (!backpack_user()->hasRole('organizer')) {
             $this->crud->denyAccess(['create', 'update', 'delete']);
         }
     }
@@ -50,13 +50,11 @@ class DonationsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        if (backpack_user()->hasRole('organization')) {
-            $user_organization_id = backpack_user()->organizations->id;
-            $this->crud->addClause('where', 'organizationId', '=', $user_organization_id);
+        if (backpack_user()->hasRole('organizer')) {
+            $this->crud->addClause('where', 'organizationId', '=', backpack_user()->organizationId);
         }
         if (backpack_user()->hasRole('donor')) {
-            $user_number = backpack_user()->phoneNumber;
-            $this->crud->addClause('where', 'phoneNumber', '=', $user_number);
+            $this->crud->addClause('where', 'phoneNumber', '=', backpack_user()->phoneNumber);
         }
 
         CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
@@ -69,14 +67,14 @@ class DonationsCrudController extends CrudController
                 'name' => 'organizationId',
                 'label' => 'Organization',
                 'model' => 'App\Models\Organizations',
-                'entity' => 'organizations',
+                'entity' => 'organization',
                 'attribute' => 'name',
             ]);
             CRUD::addColumn([
                 'name' => 'campId',
                 'label' => 'Camp',
                 'model' => 'App\Models\Camps',
-                'entity' => 'camps',
+                'entity' => 'camp',
                 'attribute' => 'name',
             ]);
         }
@@ -126,13 +124,13 @@ class DonationsCrudController extends CrudController
             'attributes' => [
                 'readonly' => 'readonly'
             ],
-            'default' => backpack_user()->organizations->id,
+            'default' => backpack_user()->organizationId,
         ]);
         CRUD::addField([
             'name' => 'campId',
             'label' => 'Camp ID',
             'type' => 'select',
-            'entity' => 'camps',
+            'entity' => 'camp',
             'attribute' => 'name',
             'model' => "App\Models\Camps",
 

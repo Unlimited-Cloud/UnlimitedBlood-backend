@@ -1,7 +1,7 @@
 {{-- This file is used for menu items by any Backpack v6 theme --}}
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i
             class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
-@if(backpack_user()->can('donor-access'))
+@if(backpack_user()->can('donors-access'))
     <li class="nav-item"><a class="nav-link" href="{{ backpack_url('donor') }}"><i class="nav-icon la la-heartbeat"></i>
             Donors</a></li>
 @endif
@@ -32,6 +32,11 @@
                 class="nav-icon la la-campground"></i>
             Camps</a></li>
 @endif
+@if(backpack_user()->can('organizers-access'))
+    <li class="nav-item"><a class="nav-link" href="{{ backpack_url('organizers') }}"><i
+                class="nav-icon la la-gavel"></i>
+            Organizers</a></li>
+@endif
 @if(backpack_user()->can('user-access'))
     <li class="nav-item nav-dropdown">
 
@@ -46,6 +51,7 @@
                         class="nav-icon la la-id-badge"></i> <span>Roles</span></a></li>
             <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i
                         class="nav-icon la la-key"></i> <span>Permissions</span></a></li>
-            @endif
+
         </ul>
     </li>
+@endif

@@ -43,13 +43,13 @@
     ->hint(100 - DB::table('donors')->count() . ' more donors needed to reach 100');
     }
 
-    if (backpack_user()->hasRole('organization')) {
+    if (backpack_user()->hasRole('organizer')) {
         $totalCamps = DB::table('camps')->count();
         $userOrganizationCamps = DB::table('camps')
-        ->where('organizationId', backpack_user()->organizations->id)->count();
+        ->where('organizationId', backpack_user()->organizationId)->count();
         $totalRequests = DB::table('requests')->count();
         $userOrganizationRequests = DB::table('requests')
-        ->where('fulfilled_by', backpack_user()->organizations->id)->count();
+        ->where('fulfilled_by', backpack_user()->organizationId)->count();
         [
         'type'    => 'div',
         'class'   => 'row',
@@ -58,7 +58,7 @@
     ->group('after_content')
     ->type('progress')
     ->class('card text-white bg-red mb-2')
-    ->value(DB::table('requests')->where('fulfilled_by', backpack_user()->organizations->id)->count())
+    ->value(DB::table('requests')->where('fulfilled_by', backpack_user()->organizationId)->count())
     ->description('Requests')
     ->progress($userOrganizationRequests / $totalRequests * 100)
     ->hint(number_format($userOrganizationRequests / $totalRequests * 100, 2) . '% of requests fulfilled by your organization.')],
@@ -66,7 +66,7 @@
     ->group('after_content')
     ->type('progress')
     ->class('card text-white bg-red mb-2')
-    ->value(DB::table('camps')->where('organizationId', backpack_user()->organizations->id)->count())
+    ->value(DB::table('camps')->where('organizationId', backpack_user()->organizationId)->count())
     ->description('Camps')
     ->progress($userOrganizationCamps / $totalCamps * 100)
     ->hint(number_format($userOrganizationCamps / $totalCamps * 100, 2) . '% of camps organized by your organization.')

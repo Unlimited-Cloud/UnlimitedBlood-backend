@@ -91,7 +91,6 @@ class OrganizationsCrudController extends CrudController
         CRUD::field('email')->type('email');
         CRUD::field('name');
         CRUD::field('address');
-        CRUD::field('user_id')->label('User ID')->type('number');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

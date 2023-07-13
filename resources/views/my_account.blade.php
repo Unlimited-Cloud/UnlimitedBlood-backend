@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="card-body backpack-profile-form bold-labels">
-                        @if (backpack_user()->hasRole('admin') || backpack_user()->hasRole('organization'))
+                        @if (backpack_user()->hasRole('admin') || backpack_user()->hasRole('organizer'))
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     @php
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                         @endif
-                        @if(backpack_user()->hasRole('organization'))
+                        @if(backpack_user()->hasRole('organizer'))
                             <div class="row">
 
                                 <div class="col-md-6 form-group">
@@ -183,7 +183,7 @@
         </div>
 
         {{-- CHANGE PASSWORD FORM --}}
-        @if(backpack_user()->hasRole('organization') || backpack_user()->hasRole('admin'))
+        @if(backpack_user()->hasRole('organizer') || backpack_user()->hasRole('admin'))
             <div class="col-lg-8">
                 <form class="form" action="{{ route('backpack.account.password') }}" method="post">
 

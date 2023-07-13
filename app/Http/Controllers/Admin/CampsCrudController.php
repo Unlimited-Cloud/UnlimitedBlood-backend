@@ -65,9 +65,8 @@ class CampsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
-        if (backpack_user()->hasRole('organization')) {
-            $user_organization_id = backpack_user()->organizations->id;
-            $this->crud->addClause('where', 'organizationId', '=', $user_organization_id);
+        if (backpack_user()->hasRole('organizer')) {
+            $this->crud->addClause('where', 'organizationId', '=', backpack_user()->organizationId);
         }
 
         CRUD::column('name');
@@ -75,7 +74,7 @@ class CampsCrudController extends CrudController
             'name' => 'organizationId',
             'label' => 'Organization',
             'model' => 'App\Models\Organizations',
-            'entity' => 'organizations',
+            'entity' => 'organization',
             'attribute' => 'name',
 
         ]);
@@ -133,7 +132,7 @@ class CampsCrudController extends CrudController
             'attributes' => [
                 'readonly' => 'readonly',
             ],
-            'default' => backpack_user()->organizations->id,
+            'default' => backpack_user()->organizationId,
 
         ]);
         CRUD::field('name');

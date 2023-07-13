@@ -26,7 +26,8 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'donations-access']);
         Permission::create(['name' => 'glossary-access']);
         Permission::create(['name' => 'user-access']);
-        Permission::create(['name' => 'donor-access']);
+        Permission::create(['name' => 'donors-access']);
+        Permission::create(['name' => 'organizers-access']);
 
         // create roles and assign existing permissions
         $admin = Role::create(['name' => 'admin']);
@@ -37,18 +38,20 @@ class PermissionsSeeder extends Seeder
         $admin->givePermissionTo('donations-access');
         $admin->givePermissionTo('glossary-access');
         $admin->givePermissionTo('user-access');
-        $admin->givePermissionTo('donor-access');
+        $admin->givePermissionTo('donors-access');
+        $admin->givePermissionTo('organizers-access');
 
         $donor = Role::create(['name' => 'donor']);
         $donor->givePermissionTo('camps-access');
         $donor->givePermissionTo('donations-access');
         $donor->givePermissionTo('requests-access');
 
-        $organization = Role::create(['name' => 'organization']);
-        $organization->givePermissionTo('camps-access');
-        $organization->givePermissionTo('donations-access');
-        $organization->givePermissionTo('requests-access');
-        $organization->givePermissionTo('inventory-access');
+        $organizer = Role::create(['name' => 'organizer']);
+        $organizer->givePermissionTo('camps-access');
+        $organizer->givePermissionTo('donations-access');
+        $organizer->givePermissionTo('requests-access');
+        $organizer->givePermissionTo('inventory-access');
+        $organizer->givePermissionTo('organizers-access');
 
         $user1 = User::factory()->create([
             'name' => 'Test Admin',
@@ -86,18 +89,18 @@ class PermissionsSeeder extends Seeder
         $user5->assignRole($donor);
 
         $user6 = User::factory()->create([
-            'name' => 'Test Organization1',
-            'phoneNumber' => '3333333333',
+            'name' => 'Test Organizer1',
+            'phoneNumber' => '1010101010',
             'password' => bcrypt('password'),
         ]);
-        $user6->assignRole($organization);
+        $user6->assignRole($organizer);
 
         $user7 = User::factory()->create([
-            'name' => 'Test Organization2',
-            'phoneNumber' => '2222222222',
+            'name' => 'Test Organizer2',
+            'phoneNumber' => '2020202020',
             'password' => bcrypt('password'),
         ]);
-        $user7->assignRole($organization);
+        $user7->assignRole($organizer);
 
     }
 }

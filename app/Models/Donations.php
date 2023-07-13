@@ -43,12 +43,12 @@ class Donations extends Model
         'donationDate' => 'date:Y-m-d',
     ];
 
-    public function organizations(): BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organizations::class, 'organizationId', 'id');
     }
 
-    public function camps(): belongsTo
+    public function camp(): belongsTo
     {
         return $this->belongsTo(Camps::class, 'campId', 'id');
     }

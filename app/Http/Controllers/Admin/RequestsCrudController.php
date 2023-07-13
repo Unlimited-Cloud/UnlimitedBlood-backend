@@ -40,7 +40,7 @@ class RequestsCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
-        if (backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('organizer')) {
             $this->crud->denyAccess(['delete', 'create']);
         }
     }
@@ -59,7 +59,7 @@ class RequestsCrudController extends CrudController
             $this->crud->addClause('where', 'fulfilled_by', '=', null);
         }
 
-        if (backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('organizer')) {
             $this->crud->addClause('where', 'fulfilled_by', '=', null);
         }
 
@@ -178,7 +178,7 @@ class RequestsCrudController extends CrudController
         CRUD::field('phoneNumber')->attributes(["readonly" => "readonly"])->label('Mobile Number');
         CRUD::field('requestDate')->attributes(["readonly" => "readonly"])->label('Request Date');
 
-        if (backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('organizer')) {
             CRUD::addField([
                 'name' => 'bloodGroup',
                 'label' => 'Blood Group',
@@ -204,7 +204,7 @@ class RequestsCrudController extends CrudController
                     'type' => 'radio',
                     'model' => "App\Models\User",
                     'options' => [
-                        backpack_user()->organizations->id => 'Yes',
+                        backpack_user()->organizationId => 'Yes',
                         null => 'No'
 
                     ],
@@ -234,7 +234,7 @@ class RequestsCrudController extends CrudController
 
             if ($request->fulfilled_by != null) {
                 $inventory = Inventory::where([
-                    ['organizationId', '=', backpack_user()->organizations->id],
+                    ['organizationId', '=', backpack_user()->organizationId],
                     ['bloodGroup', '=', $request->bloodGroup],
                     ['bloodType', '=', $request->bloodType],
                     ['quantity', '>=', $request->quantity]

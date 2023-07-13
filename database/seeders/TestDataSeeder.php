@@ -18,13 +18,12 @@ class TestDataSeeder extends Seeder
         Organizations::factory()->create([
             'name' => 'Test Organization1',
             'phoneNumber' => '3333333333',
-            'user_id' => 6,
+
         ]);
 
         Organizations::factory()->create([
             'name' => 'Test Organization2',
             'phoneNumber' => '2222222222',
-            'user_id' => 7,
         ]);
 
         Donor::factory()->create([

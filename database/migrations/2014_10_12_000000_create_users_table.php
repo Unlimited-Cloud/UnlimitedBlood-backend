@@ -9,14 +9,32 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void
+
     {
+        Schema::create('organizations', function (Blueprint $table) {
+            $table->id();
+            $table->string('phoneNumber')->unique();
+            $table->string('email')->unique();
+            $table->string('name');
+            $table->decimal('latitude', 12, 8);
+            $table->decimal('longitude', 12, 8);
+            $table->string('address');
+            $table->string('website')->nullable();
+            $table->binary('logo')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id()->unique();
             $table->string('name');
             $table->string('phoneNumber')->unique();
             $table->string('password');
+            $table->unsignedBigInteger('organizationId')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('organizationId')->references('id')->on('organizations');
         });
 
         Schema::create('donors', function (Blueprint $table) {
@@ -34,23 +52,6 @@ return new class extends Migration {
             $table->binary('profilePicture')->nullable();
             $table->boolean('diabetes')->default(false);
             $table->boolean('loginStatus')->default(false);
-            $table->rememberToken();
-            $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
-        });
-
-        Schema::create('organizations', function (Blueprint $table) {
-            $table->id();
-            $table->string('phoneNumber')->unique();
-            $table->unsignedBigInteger('user_id')->unique();
-            $table->string('email')->unique();
-            $table->string('name');
-            $table->decimal('latitude', 12, 8);
-            $table->decimal('longitude', 12, 8);
-            $table->string('address');
-            $table->string('website')->nullable();
-            $table->binary('logo')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
@@ -137,6 +138,7 @@ return new class extends Migration {
      */
     public function down(): void
     {   //order matters
+        Schema::dropIfExists('users');
         Schema::dropIfExists('donations');
         Schema::dropIfExists('requests');
         Schema::dropIfExists('donors');

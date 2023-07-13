@@ -136,11 +136,12 @@ class OrganizersCrudController extends CrudController
                     'name' => 'organizationId',
                     'label' => 'Organization',
                     'type' => 'select',
-                    'entity' => 'organizations',
+                    'entity' => 'organization',
                     'attribute' => 'name',
 
                 ]
             );
+
         } elseif (backpack_user()->hasRole('organizer')) {
 
             $this->crud->addField(
@@ -152,6 +153,10 @@ class OrganizersCrudController extends CrudController
                 ]
             );
         }
+        
+        User::created(function ($entry) {
+            $entry->assignRole('organizer');
+        });
 
 
         /**

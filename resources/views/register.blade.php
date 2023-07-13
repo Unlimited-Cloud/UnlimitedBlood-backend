@@ -29,7 +29,7 @@
 
                         <div class="form-group">
                             <label class="control-label"
-                                   for="{{ backpack_authentication_column() }}">{{ trans(config('backpack.base.authentication_column_name')) }}</label>
+                                   for="{{ backpack_authentication_column() }}">{{ "Organization Phone Number" }}</label>
 
                             <div>
                                 <input
@@ -48,7 +48,38 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="email">{{ 'Email' }}</label>
+                            <label class="control-label"
+                                   for="email">{{ 'Personal Phone Number (Login Number)' }}</label>
+                            <div>
+                                <input type="numeric"
+                                       class="form-control{{ $errors->has('personal_num') ? ' is-invalid' : '' }}"
+                                       name="personal_num" id="personal_num" value="{{ old('personal_num') }}">
+                                @if ($errors->has('personal_num'))
+                                    <span class="invalid-feedback">
+                                         <strong>{{ $errors->first('personal_num') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label"
+                                   for="email">{{ 'Your Full Name' }}</label>
+                            <div>
+                                <input type="text"
+                                       class="form-control{{ $errors->has('personal_name') ? ' is-invalid' : '' }}"
+                                       name="personal_name" id="personal_num" value="{{ old('personal_name') }}">
+                                @if ($errors->has('personal_name'))
+                                    <span class="invalid-feedback">
+                                         <strong>{{ $errors->first('personal_name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label" for="email">{{ 'Organization Email' }}</label>
                             <div>
                                 <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
                                        name="email" id="email" value="{{ old('email') }}">

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends BackpackRegisterController
@@ -31,10 +32,16 @@ class RegisterController extends BackpackRegisterController
         $users_table = $user->getTable();
         $phoneNumber_validation = backpack_authentication_column() == 'phoneNumber' ? 'numeric|' : '';
 
+        $organization_model_fqn = config('auth.providers.organizations.model');
+        $organization = new $organization_model_fqn();
+        $organizations_table = $organization->getTable();
+
         return Validator::make($data, [
             'name' => 'required|max:255',
-            backpack_authentication_column() => 'required|'.$phoneNumber_validation.'digits:10|unique:'.$users_table,
-            'email' => 'required',
+            backpack_authentication_column() => 'required|'.$phoneNumber_validation.'digits:10|unique:'.$organizations_table,
+            'personal_name' => 'required|max:255',
+            'personal_num' => 'required|numeric|digits:10|unique:'.$users_table.',phoneNumber',
+            'email' => 'required|unique:'.$organizations_table,
             'address' => 'required',
             'website' => 'nullable|url',
             'password' => 'required|min:8|confirmed',
@@ -56,22 +63,24 @@ class RegisterController extends BackpackRegisterController
 
         $organization_model_fqn = config('auth.providers.organizations.model');
         $organization = new $organization_model_fqn();
-        $new_user = $user->create([
-            'name' => $data['name'],
-            backpack_authentication_column() => $data[backpack_authentication_column()],
-            'password' => bcrypt($data['password']),
-        ]);
 
         $organization->create([
             'name' => $data['name'],
             'phoneNumber' => $data['phoneNumber'],
-            'user_id' => $new_user->id,
             'email' => $data['email'],
             'address' => $data['address'],
+            'latitude' => 30.0444,
+            'longitude' => 31.2357,
             'website' => $data['website'],
             'logo' => $data['logo'],
-
         ]);
+        $user->create([
+            'name' => $data['personal_name'],
+            'phoneNumber' => $data['personal_num'],
+            'password' => bcrypt($data['password']),
+            'organizationId' => DB::table('organizations')->where('phoneNumber', $data['phoneNumber'])->value('id')
+        ]);
+
         return $user;
     }
 }

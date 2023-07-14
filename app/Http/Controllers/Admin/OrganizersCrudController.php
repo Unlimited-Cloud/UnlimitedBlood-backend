@@ -153,7 +153,7 @@ class OrganizersCrudController extends CrudController
                 ]
             );
         }
-        
+
         User::created(function ($entry) {
             $entry->assignRole('organizer');
         });

@@ -23,6 +23,12 @@ Route::put('/login', [DonorController::class, 'login']);
 
 Route::put('/logout', [DonorController::class, 'logout']);
 
-Route::post('/editProfile', [DonorController::class, 'editProfile']);
+Route::put('/editProfile', [DonorController::class, 'editProfile']);
 
 Route::get('/leaderboard', [DonorController::class, 'leaderboard']);
+
+Route::get('/getRequests', [DonorController::class, 'getRequests']);
+
+Route::post('/sendRequest', [DonorController::class, 'sendRequest']);
+
+

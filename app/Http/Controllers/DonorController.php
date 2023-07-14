@@ -95,7 +95,6 @@ class DonorController
 
     public function leaderboard(Request $request): JsonResponse
     {
-        $phoneNumber = $request->input('phoneNumber');
 
         try {
             $donationCounts = DB::table('donations')
@@ -130,6 +129,55 @@ class DonorController
 
             return response()->json(['error' => $e], 500);
         }
+
+    }
+
+    public function sendRequest(Request $request): JsonResponse
+    {
+        $phoneNumber = $request->input('phoneNumber');
+        $bloodGroup = $request->input('bloodGroup');
+        $bloodType = $request->input('bloodType');
+        $needByDate = $request->input('needByDate');
+        $quantity = $request->input('quantity');
+        $address = $request->input('address');
+
+        try {
+            DB::table('requests')->insert([
+                'phoneNumber' => $phoneNumber,
+                'bloodGroup' => $bloodGroup,
+                'bloodType' => $bloodType,
+                'needByDate' => $needByDate,
+                'requestDate' => today(),
+                'quantity' => $quantity,
+                'address' => $address,
+            ]);
+
+            return response()->json(['success' => true]);
+
+        } catch (Exception) {
+            return response()->json(['error' => 'An error occurred'], 500);
+        }
+    }
+
+    public function getRequests(Request $request): JsonResponse
+    {
+
+        $phoneNumber = $request->input('phoneNumber');
+
+        try {
+            $requests = DB::table('requests')
+                ->where('phoneNumber', $phoneNumber)
+                ->select('requestDate', 'bloodGroup', 'bloodType',
+                    'needByDate', 'quantity', 'address', 'fulfilled_by')
+                ->get();
+
+
+            return response()->json($requests);
+
+        } catch (Exception) {
+            return response()->json(['error' => 'An error occurred'], 500);
+        }
+
 
     }
 

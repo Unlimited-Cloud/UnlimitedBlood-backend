@@ -37,7 +37,7 @@ class RequestsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Requests::class);
-        CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
         if (backpack_user()->hasRole('organizer')) {
@@ -202,7 +202,7 @@ class RequestsCrudController extends CrudController
                     'name' => 'fulfilled_by',
                     'label' => 'Fulfilled?',
                     'type' => 'radio',
-                    'model' => "App\Models\User",
+                    'model' => "App\Models\Organization",
                     'options' => [
                         backpack_user()->organizationId => 'Yes',
                         null => 'No'

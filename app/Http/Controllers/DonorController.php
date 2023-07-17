@@ -93,7 +93,7 @@ class DonorController
         }
     }
 
-    public function leaderboard(Request $request): JsonResponse
+    public function leaderboard(): JsonResponse
     {
 
         try {
@@ -166,16 +166,16 @@ class DonorController
 
         try {
             $requests = DB::table('requests')
-                ->where('phoneNumber', $phoneNumber)
-                ->select('requestDate', 'bloodGroup', 'bloodType',
-                    'needByDate', 'quantity', 'address', 'fulfilled_by')
+                ->leftJoin('organizations', 'requests.fulfilled_by', '=', 'organizations.id')
+                ->where('requests.phoneNumber', $phoneNumber)
+                ->select('requests.requestDate', 'requests.bloodGroup', 'requests.bloodType',
+                    'requests.needByDate', 'requests.quantity', 'requests.address', 'organizations.name as fulfilled_by')
                 ->get();
-
 
             return response()->json($requests);
 
-        } catch (Exception) {
-            return response()->json(['error' => 'An error occurred'], 500);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
         }
 
 

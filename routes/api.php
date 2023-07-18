@@ -31,4 +31,6 @@ Route::get('/getRequests', [DonorController::class, 'getRequests']);
 
 Route::post('/sendRequest', [DonorController::class, 'sendRequest']);
 
+Route::get('/getDonations', [DonorController::class, 'getDonations']);
+
 

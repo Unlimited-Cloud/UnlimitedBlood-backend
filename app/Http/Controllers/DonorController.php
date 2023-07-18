@@ -129,7 +129,6 @@ class DonorController
 
             return response()->json(['error' => $e], 500);
         }
-
     }
 
     public function sendRequest(Request $request): JsonResponse
@@ -178,9 +177,35 @@ class DonorController
         } catch (Exception $e) {
             return response()->json(['error' => $e], 500);
         }
-
-
     }
 
+    public function getDonations(Request $request): JsonResponse
+    {
+
+        $phoneNumber = $request->input('phoneNumber');
+
+        try {
+            $donations = DB::table('donations')
+                ->leftJoin('organizations', 'donations.organizationId', '=', 'organizations.id')
+                ->where('donations.phoneNumber', $phoneNumber)
+                ->select('donations.donationDate', 'donations.bloodType',
+                    'donations.quantity', 'donations.upperBP', 'donations.lowerBP', 'organizations.name as organizationId')
+                ->orderByDesc('donations.donationDate')
+                ->get();
+
+            $totalDonations = $donations->count();
+            
+
+            $responseData = [
+                'donations' => $donations,
+                'totalDonations' => $totalDonations,
+            ];
+
+            return response()->json($responseData);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
 
 }

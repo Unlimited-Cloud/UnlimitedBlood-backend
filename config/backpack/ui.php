@@ -61,9 +61,9 @@ return [
     // - default: '' (project root)
     // - alternative: 'admin' (the admin's dashboard)
     'home_link' => '',
-
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo' => '<b>Blood</b>Nepal',
+    // src is in resources/img/logo.png
+    'project_logo' => '<img src="' . asset('storage/logo.png') . '" alt="Logo" style="width: 120px; height: auto;">',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => false,

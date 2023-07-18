@@ -170,6 +170,7 @@ class DonorController
                 ->where('requests.phoneNumber', $phoneNumber)
                 ->select('requests.requestDate', 'requests.bloodGroup', 'requests.bloodType',
                     'requests.needByDate', 'requests.quantity', 'requests.address', 'organizations.name as fulfilled_by')
+                ->orderByDesc('requests.requestDate')
                 ->get();
 
             return response()->json($requests);

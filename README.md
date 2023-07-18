@@ -1,6 +1,6 @@
-# BloodNepal
+# UnlimitedBlood
 
-This is the backend of the BloodNepal project. This project is made using:
+This is the backend of the UnlimitedBlood project. This project is made using:
 
 - Laravel 10.14.1
 - PHP 8.2.7

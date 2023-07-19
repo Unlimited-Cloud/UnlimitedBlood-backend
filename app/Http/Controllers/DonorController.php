@@ -181,11 +181,10 @@ class DonorController
 
     public function getDonations(Request $request): JsonResponse
     {
-
         $phoneNumber = $request->input('phoneNumber');
 
         try {
-            $donations = DB::table('donations')
+            $allDonations = DB::table('donations')
                 ->leftJoin('organizations', 'donations.organizationId', '=', 'organizations.id')
                 ->where('donations.phoneNumber', $phoneNumber)
                 ->select('donations.donationDate', 'donations.bloodType',
@@ -193,12 +192,14 @@ class DonorController
                 ->orderByDesc('donations.donationDate')
                 ->get();
 
+            $donations = $allDonations;
+
             $totalDonations = $donations->count();
-            
 
             $responseData = [
-                'donations' => $donations,
+                'donations' => $allDonations,
                 'totalDonations' => $totalDonations,
+
             ];
 
             return response()->json($responseData);

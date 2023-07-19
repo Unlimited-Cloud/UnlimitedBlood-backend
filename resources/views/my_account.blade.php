@@ -165,7 +165,7 @@
                                     @endphp
                                     <label class="required">{{ $label }}</label>
                                     <input required class="form-control" type="email" name="{{ $field }}"
-                                           value="{{ old($field) ? old($field) : backpack_user()->donor->$field }}">
+                                           value="{{ old($field) ? old($field) : backpack_user()->donors->$field }}">
                                 </div>
                             </div>
                         @endif

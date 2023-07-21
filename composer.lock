@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d80ed5769066753497a68c3407db8c0b",
+    "content-hash": "232de292a463a13bf503579d1a105ce2",
     "packages": [
         {
             "name": "backpack/basset",
@@ -247,17 +247,86 @@
             "time": "2023-07-01T06:01:45+00:00"
         },
         {
-            "name": "backpack/theme-coreuiv2",
-            "version": "1.1.0",
+            "name": "backpack/pro",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Laravel-Backpack/theme-coreuiv2.git",
-                "reference": "7ba2837bbf7fdaa4c0160dc68b82985d77f52608"
+                "url": "git@github.com:Laravel-Backpack/PRO.git",
+                "reference": "ef8e78769f837ad958908b6e77b49df6a9236557"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Backpack/theme-coreuiv2/zipball/7ba2837bbf7fdaa4c0160dc68b82985d77f52608",
-                "reference": "7ba2837bbf7fdaa4c0160dc68b82985d77f52608",
+                "url": "https://repo.backpackforlaravel.com/dist/backpack/pro/backpack-pro-ef8e78769f837ad958908b6e77b49df6a9236557-zip-7051b2.zip",
+                "reference": "ef8e78769f837ad958908b6e77b49df6a9236557",
+                "shasum": "140f7cb0e192d7edf81fccd7252088069afa55f9"
+            },
+            "require": {
+                "backpack/crud": "^6.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~5|~6",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Backpack\\Pro\\AddonServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Backpack\\Pro\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Backpack\\Pro\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit --testdox"
+                ]
+            },
+            "license": [
+                "Proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Cristian Tabacitu",
+                    "email": "cristian.tabacitu@backpackforlaravel.com",
+                    "homepage": "https://backpackforlaravel.com"
+                }
+            ],
+            "description": "Operations, Fields, Columns, Filters and Widgets for not-so-simple admin panels.",
+            "homepage": "https://github.com/digitallyhappy/backpack-pro",
+            "keywords": [
+                "Backpack",
+                "Backpack Addon",
+                "Backpack for Laravel",
+                "Laravel",
+                "Pro"
+            ],
+            "support": {
+                "source": "https://github.com/Laravel-Backpack/PRO/tree/2.0.4",
+                "issues": "https://github.com/Laravel-Backpack/PRO/issues"
+            },
+            "time": "2023-07-03T15:09:40+00:00"
+        },
+        {
+            "name": "backpack/theme-coreuiv2",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Laravel-Backpack/theme-coreuiv2.git",
+                "reference": "68b8cd1bd01fa423df440bba071bcacbb05ae1d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Laravel-Backpack/theme-coreuiv2/zipball/68b8cd1bd01fa423df440bba071bcacbb05ae1d3",
+                "reference": "68b8cd1bd01fa423df440bba071bcacbb05ae1d3",
                 "shasum": ""
             },
             "require": {
@@ -302,9 +371,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Backpack/theme-coreuiv2/issues",
-                "source": "https://github.com/Laravel-Backpack/theme-coreuiv2/tree/1.1.0"
+                "source": "https://github.com/Laravel-Backpack/theme-coreuiv2/tree/1.1.4"
             },
-            "time": "2023-06-30T15:29:38+00:00"
+            "time": "2023-07-20T14:31:47+00:00"
         },
         {
             "name": "brick/math",

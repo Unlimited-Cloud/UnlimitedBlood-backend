@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-5">
             <h3 class="text-center mb-4">{{ 'Register Your Organization' }}</h3>
-            <p class="text-center mb-1">{{ 'To register as a donor, please download the BloodNepal app.' }}
+            <p class="text-center mb-1">{{ 'To register as a donor, please download the UnlimitedBlood app.' }}
             <p>
             <div class="card">
                 <div class="card-body">

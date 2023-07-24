@@ -5,6 +5,7 @@ This is the backend of the UnlimitedBlood project. This project is made using:
 - Laravel 10.14.1
 - PHP 8.2.7
 - Backpack for Laravel 6.0.0
+- MySQL 8.0.33
 
 # Screenshots
 

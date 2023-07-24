@@ -226,7 +226,7 @@ class DonorController
                 "h" => "9e9e5b1984cae182f35f296f82b7d5b8",
                 "op" => "pv",
                 "to" => "977".$phoneNumber,
-                "msg" => "This your OTP from UnlimitedBlood: ".$message
+                "msg" => "This is your One Time Password (OTP) for UnlimitedBlood: ".$message,
             ];
 
             $response = $http->get('http://unlimitedsms.net/playsms/index.php?'.http_build_query($payloads));
@@ -319,6 +319,7 @@ class DonorController
                 'diabetes' => $diabetes,
                 'user_id' => $user->id,
                 'phoneVerified' => true,
+                "loginStatus" => true,
                 'created_at' => now()
             ]);
 

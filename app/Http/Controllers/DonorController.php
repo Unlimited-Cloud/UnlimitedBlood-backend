@@ -225,11 +225,11 @@ class DonorController
                 "u" => "lalit",
                 "h" => "9e9e5b1984cae182f35f296f82b7d5b8",
                 "op" => "pv",
-                "to" => "977" . $phoneNumber,
-                "msg" => "This your OTP from UnlimitedBlood: " . $message
+                "to" => "977".$phoneNumber,
+                "msg" => "This your OTP from UnlimitedBlood: ".$message
             ];
 
-            $response = $http->get('http://unlimitedsms.net/playsms/index.php?' . http_build_query($payloads));
+            $response = $http->get('http://unlimitedsms.net/playsms/index.php?'.http_build_query($payloads));
             // $response = $http->get('http://sms.unlimitedremit.com/index.php'. http_build_query($payloads));
             $body = $response->getBody();
             $result = json_decode($body->getContents(), 1);
@@ -243,7 +243,7 @@ class DonorController
             return response()->json(['data' => $result]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                $response = json_decode((string) $e->getResponse()->getBody(), 1);
                 return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
             }
             return response()->json(['status' => 500, 'error' => $e->getMessage()]);
@@ -272,7 +272,7 @@ class DonorController
 
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                $response = json_decode((string) $e->getResponse()->getBody(), 1);
                 return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
             }
             return response()->json(['status' => 500, 'error' => $e->getMessage()]);
@@ -325,6 +325,7 @@ class DonorController
             return response()->json(['success' => true]);
 
         } catch (Exception $e) {
+            DB::table('users')->where('users.phoneNumber', $phoneNumber)->delete();
             return response()->json(['status' => 500, 'error' => $e->getMessage()]);
         }
     }

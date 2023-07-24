@@ -52,10 +52,18 @@ return new class extends Migration {
             $table->binary('profilePicture')->nullable();
             $table->boolean('diabetes')->default(false);
             $table->boolean('loginStatus')->default(false);
+            $table->boolean('phoneVerified')->default(false);
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+        });
+
+        Schema::create('sms', function (Blueprint $table) {
+            $table->id();
+            $table->string('phoneNumber');
+            $table->string('otp');
+            $table->timestamps();
         });
 
         Schema::create('camps', function (Blueprint $table) {
@@ -138,10 +146,11 @@ return new class extends Migration {
      */
     public function down(): void
     {   //order matters
-        Schema::dropIfExists('users');
         Schema::dropIfExists('donations');
         Schema::dropIfExists('requests');
+        Schema::dropIfExists('sms');
         Schema::dropIfExists('donors');
+        Schema::dropIfExists('users');
         Schema::dropIfExists('inventory');
         Schema::dropIfExists('camps');
         Schema::dropIfExists('organizations');

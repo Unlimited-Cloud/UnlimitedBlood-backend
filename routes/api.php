@@ -33,4 +33,10 @@ Route::post('/sendRequest', [DonorController::class, 'sendRequest']);
 
 Route::get('/getDonations', [DonorController::class, 'getDonations']);
 
+Route::post('/sendSms', [DonorController::class, 'sendSms']);
+
+Route::get('/verifyPhoneNumber', [DonorController::class, 'verifyPhoneNumber']);
+
+Route::post('/register', [DonorController::class, 'register']);
+
 

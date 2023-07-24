@@ -20,7 +20,7 @@ class RequestsFactory extends Factory
         return [
             'bloodGroup' => fake()->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'bloodType' => fake()->randomElement(['Whole Blood', 'Plasma', 'Platelets']),
-            'quantity' => fake()->numberBetween(1, 1000),
+            'quantity' => fake()->numberBetween(100, 1000),
             'needByDate' => fake()->date(),
             'requestDate' => fake()->date(),
             'address' => fake()->address(),

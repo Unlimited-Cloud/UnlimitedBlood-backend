@@ -19,8 +19,10 @@ Route::get('admin/register', [RegisterController::class, 'showRegistrationForm']
 Route::post('admin/register', [RegisterController::class, 'register'])->name('backpack.auth.register');
 
 Route::get('edit-account-info', [MyAccountController::class, 'getAccountInfoForm'])->name('backpack.account.info');
-Route::post('edit-account-info', [MyAccountController::class, 'postAccountInfoForm'])->name('backpack.account.info.store');
-Route::post('change-password', [MyAccountController::class, 'postChangePasswordForm'])->name('backpack.account.password');
+Route::post('edit-account-info',
+    [MyAccountController::class, 'postAccountInfoForm'])->name('backpack.account.info.store');
+Route::post('change-password',
+    [MyAccountController::class, 'postChangePasswordForm'])->name('backpack.account.password');
 
 Route::get('/', function () {
     return redirect('/admin');

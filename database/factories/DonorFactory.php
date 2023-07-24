@@ -27,6 +27,7 @@ class DonorFactory extends Factory
             'gender' => fake()->randomElement(['Male', 'Female', 'Other']),
             'birthDate' => fake()->date(),
             'profilePicture' => fake()->imageUrl(),
+            'phoneVerified' => true
         ];
     }
 }

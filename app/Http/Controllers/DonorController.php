@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Donor;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -168,7 +170,8 @@ class DonorController
                 ->leftJoin('organizations', 'requests.fulfilled_by', '=', 'organizations.id')
                 ->where('requests.phoneNumber', $phoneNumber)
                 ->select('requests.requestDate', 'requests.bloodGroup', 'requests.bloodType',
-                    'requests.needByDate', 'requests.quantity', 'requests.address', 'organizations.name as fulfilled_by')
+                    'requests.needByDate', 'requests.quantity', 'requests.address',
+                    'organizations.name as fulfilled_by')
                 ->orderByDesc('requests.requestDate')
                 ->get();
 
@@ -188,7 +191,8 @@ class DonorController
                 ->leftJoin('organizations', 'donations.organizationId', '=', 'organizations.id')
                 ->where('donations.phoneNumber', $phoneNumber)
                 ->select('donations.donationDate', 'donations.bloodType',
-                    'donations.quantity', 'donations.upperBP', 'donations.lowerBP', 'organizations.name as organizationId')
+                    'donations.quantity', 'donations.upperBP', 'donations.lowerBP',
+                    'organizations.name as organizationId')
                 ->orderByDesc('donations.donationDate')
                 ->get();
 
@@ -206,6 +210,122 @@ class DonorController
 
         } catch (Exception $e) {
             return response()->json(['error' => $e], 500);
+        }
+    }
+
+    public function sendSms(Request $request): JsonResponse
+    {
+        $phoneNumber = $request->input('phoneNumber');
+        $message = $request->input('message');
+
+        try {
+            $http = new Client();
+            $payloads = [
+                "app" => "ws",
+                "u" => "lalit",
+                "h" => "9e9e5b1984cae182f35f296f82b7d5b8",
+                "op" => "pv",
+                "to" => "977" . $phoneNumber,
+                "msg" => "This your OTP from UnlimitedBlood: " . $message
+            ];
+
+            $response = $http->get('http://unlimitedsms.net/playsms/index.php?' . http_build_query($payloads));
+            // $response = $http->get('http://sms.unlimitedremit.com/index.php'. http_build_query($payloads));
+            $body = $response->getBody();
+            $result = json_decode($body->getContents(), 1);
+
+            DB::table('sms')->insert([
+                'phoneNumber' => $phoneNumber,
+                'otp' => $message,
+                'created_at' => now()
+            ]);
+
+            return response()->json(['data' => $result]);
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
+            }
+            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
+        }
+
+    }
+
+    public function verifyPhoneNumber(Request $request): JsonResponse
+    {
+
+        $phoneNumber = $request->input('phoneNumber');
+        $message = $request->input('message');
+
+        try {
+            $code = DB::table('sms')
+                ->where('sms.phoneNumber', $phoneNumber)
+                ->orderByDesc('sms.created_at')->select('sms.otp')->first();
+
+            if ($code && $code->otp == $message) {
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
+            }
+            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
+        }
+    }
+
+    public function register(Request $request): JsonResponse
+    {
+        $phoneNumber = $request->input('phoneNumber');
+        $email = $request->input('email');
+        $bloodGroup = $request->input('bloodGroup');
+        $fname = $request->input('fname');
+        $mname = $request->input('mname');
+        $lname = $request->input('lname');
+        $password = bcrypt($request->input('password'));
+        $address = $request->input('address');
+        $gender = $request->input('gender');
+        $birthDate = $request->input('birthDate');
+        $diabetes = $request->input('diabetes');
+
+        try {
+
+            DB::table('users')->insert([
+                'phoneNumber' => $phoneNumber,
+                'name' => $fname,
+                'password' => $password,
+                'created_at' => now()
+
+            ]);
+            $user = DB::table('users')->where('users.phoneNumber', $phoneNumber)->first();
+            DB::table('donors')->insert([
+                'phoneNumber' => $phoneNumber,
+                'email' => $email,
+                'bloodGroup' => $bloodGroup,
+                'fname' => $fname,
+                'mname' => $mname,
+                'lname' => $lname,
+                'gender' => $gender,
+                'birthDate' => $birthDate,
+                'password' => $password,
+                'address' => $address,
+                'diabetes' => $diabetes,
+                'user_id' => $user->id,
+                'phoneVerified' => true,
+                'created_at' => now()
+            ]);
+
+            return response()->json(['success' => true]);
+
+        } catch (Exception $e) {
+            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
         }
     }
 

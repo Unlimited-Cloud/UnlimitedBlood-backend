@@ -331,22 +331,61 @@ class DonorController
         }
     }
 
-    public function getOrganizations(): JsonResponse
+    public function getOrganizations(Request $request): JsonResponse
     {
-
+        $lat = $request->input('latitude');
+        $lng = $request->input('longitude');
 
         try {
-            $requests = DB::table('organizations')
+            // Fetch organizations from the database
+            $organizations = DB::table('organizations')
                 ->select('organizations.id', 'organizations.name', 'organizations.address',
                     'organizations.phoneNumber', 'organizations.email', 'organizations.latitude',
                     'organizations.longitude', 'organizations.website', 'organizations.logo')
                 ->get();
 
-            return response()->json($requests);
+            // Calculate the distance for each organization and store it in a new array
+            $organizationsWithDistance = [];
+            foreach ($organizations as $organization) {
+                $distance = $this->haversineDistance($lat, $lng, $organization->latitude, $organization->longitude);
+                $organization->distance = $distance; // Add the distance property to the organization object
+                $organizationsWithDistance[] = $organization;
+            }
+
+            // Sort the organizations based on their distances in ascending order
+            usort($organizationsWithDistance, function ($a, $b) {
+                return $a->distance <=> $b->distance;
+            });
+
+            return response()->json($organizationsWithDistance);
 
         } catch (Exception $e) {
             return response()->json(['error' => $e], 500);
         }
     }
 
+    private function haversineDistance($lat1, $lng1, $lat2, $lng2): float|int
+    {
+        $earthRadius = 6371; // Radius of the Earth in kilometers
+
+        // Convert latitude and longitude from degrees to radians
+        $lat1 = deg2rad($lat1);
+        $lng1 = deg2rad($lng1);
+        $lat2 = deg2rad($lat2);
+        $lng2 = deg2rad($lng2);
+
+        // Calculate the differences between latitudes and longitudes
+        $dLat = $lat2 - $lat1;
+        $dLng = $lng2 - $lng1;
+
+        // Calculate the Haversine distance
+        $a = sin($dLat / 2) * sin($dLat / 2) + cos($lat1) * cos($lat2) * sin($dLng / 2) * sin($dLng / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earthRadius * $c;
+
+        return $distance;
+    }
+
 }
+
+

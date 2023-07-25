@@ -39,4 +39,6 @@ Route::get('/verifyPhoneNumber', [DonorController::class, 'verifyPhoneNumber']);
 
 Route::post('/register', [DonorController::class, 'register']);
 
+Route::get('/getOrganizations', [DonorController::class, 'getOrganizations']);
+
 

@@ -225,11 +225,11 @@ class DonorController
                 "u" => "lalit",
                 "h" => "9e9e5b1984cae182f35f296f82b7d5b8",
                 "op" => "pv",
-                "to" => "977" . $phoneNumber,
-                "msg" => "This is your One Time Password (OTP) for UnlimitedBlood: " . $message,
+                "to" => "977".$phoneNumber,
+                "msg" => "This is your One Time Password (OTP) for UnlimitedBlood: ".$message,
             ];
 
-            $response = $http->get('http://unlimitedsms.net/playsms/index.php?' . http_build_query($payloads));
+            $response = $http->get('http://unlimitedsms.net/playsms/index.php?'.http_build_query($payloads));
             // $response = $http->get('http://sms.unlimitedremit.com/index.php'. http_build_query($payloads));
             $body = $response->getBody();
             $result = json_decode($body->getContents(), 1);
@@ -243,7 +243,7 @@ class DonorController
             return response()->json(['data' => $result]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                $response = json_decode((string) $e->getResponse()->getBody(), 1);
                 return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
             }
             return response()->json(['status' => 500, 'error' => $e->getMessage()]);
@@ -272,7 +272,7 @@ class DonorController
 
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                $response = json_decode((string)$e->getResponse()->getBody(), 1);
+                $response = json_decode((string) $e->getResponse()->getBody(), 1);
                 return response()->json(['status' => $e->getResponse()->getStatusCode(), 'error' => $response]);
             }
             return response()->json(['status' => 500, 'error' => $e->getMessage()]);
@@ -389,9 +389,44 @@ class DonorController
         // Calculate the Haversine distance
         $a = sin($dLat / 2) * sin($dLat / 2) + cos($lat1) * cos($lat2) * sin($dLng / 2) * sin($dLng / 2);
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        $distance = $earthRadius * $c;
+        return $earthRadius * $c;
+    }
 
-        return $distance;
+    public function getEvents(Request $request): JsonResponse
+    {
+        $lat = $request->input('latitude');
+        $lng = $request->input('longitude');
+
+        try {
+            // Fetch camps that haven't ended from the database
+            $camps = DB::table('camps')
+                ->where('camps.endDate', '>=', now())
+                ->select('camps.id', 'camps.name', 'camps.address', 'camps.phoneNumber',
+                    'camps.email', 'camps.latitude', 'camps.longitude', 'camps.website',
+                    'camps.logo', 'camps.startDate', 'camps.endDate')
+                ->get();
+
+            // calculate the distance from each camp and only return the ones that are within 50km
+            $campsWithDistance = [];
+            foreach ($camps as $camp) {
+                $distance = $this->haversineDistance($lat, $lng, $camp->latitude, $camp->longitude);
+                $camp->distance = $distance; // Add the distance property to the camp object
+                if ($distance <= 50) {
+                    $campsWithDistance[] = $camp;
+                }
+            }
+            // Sort the camps based on their distances in ascending order
+            usort($campsWithDistance, function ($a, $b) {
+                return $a->distance <=> $b->distance;
+            });
+
+            return response()->json($campsWithDistance);
+
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
+
     }
 
 }

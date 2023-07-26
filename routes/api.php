@@ -41,4 +41,6 @@ Route::post('/register', [DonorController::class, 'register']);
 
 Route::get('/getOrganizations', [DonorController::class, 'getOrganizations']);
 
+Route::get('/getEvents', [DonorController::class, 'getEvents']);
+
 

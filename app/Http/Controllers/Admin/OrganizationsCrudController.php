@@ -35,7 +35,7 @@ class OrganizationsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Organizations::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/organizations');
+        CRUD::setRoute(config('backpack.base.route_prefix').'/organizations');
         CRUD::setEntityNameStrings('organizations', 'organizations');
 
         if (backpack_user()->hasRole('donor') || backpack_user()->hasRole('organization')) {
@@ -45,7 +45,6 @@ class OrganizationsCrudController extends CrudController
             $this->crud->denyAccess(['show', 'update', 'delete']);
 
         }
-
     }
 
 
@@ -104,20 +103,21 @@ class OrganizationsCrudController extends CrudController
             'logo' => ValidUploadMultiple::field('max:1')
                 ->file('file|mimes:jpeg,png,jpg|max:2048'),
             'address' => 'required',
+            'location' => 'required'
 
         ]);
         CRUD::field('phoneNumber')->label('Organization Phone Number')->type('number');
         CRUD::field('email')->type('email');
         CRUD::field('name')->label('Organization Name')->type('text');
-        CRUD::field('address')->type('text');
+        //CRUD::field('address')->type('text');
         CRUD::addfield([
-            'name' => 'location',
+            'name' => 'address',
             'type' => 'google_map',
             // optionals
             'map_options' => [
-                'default_lat' => 123,
-                'default_lng' => 456,
-                'locate' => true, // when false, only a map is displayed. No value for submition.
+                'default_lat' => 27.7,
+                'default_lng' => 85.3,
+                'locate' => true, // when false, only a map is displayed. No value for submission.
                 'height' => 400 // in pixels
             ]
         ]);

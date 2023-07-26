@@ -15,7 +15,7 @@ return [
     */
     'google_places' => [
         'key' => 'AIzaSyBozYk5_cgJLRqv3jbmEH9are0b0gHVLlc'
-    ],
+    ]
 
 
     /*'mailgun' => [

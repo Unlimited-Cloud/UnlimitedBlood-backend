@@ -296,15 +296,23 @@ class DonorController
         $diabetes = $request->input('diabetes');
 
         try {
-
-            DB::table('users')->insert([
-                'phoneNumber' => $phoneNumber,
-                'name' => $fname,
-                'password' => $password,
-                'created_at' => now()
-
-            ]);
+            $donor = DB::table('donors')->where('donors.phoneNumber', $phoneNumber)->first();
+            if ($donor) {
+                return response()->json(['success' => false, 'error' => 'User already exists'], 500);
+            }
             $user = DB::table('users')->where('users.phoneNumber', $phoneNumber)->first();
+            if (!$user) {
+                DB::table('users')->insert([
+                    'phoneNumber' => $phoneNumber,
+                    'name' => $fname,
+                    'password' => $password,
+                    'created_at' => now()
+
+                ]);
+                $user = DB::table('users')->where('users.phoneNumber', $phoneNumber)->first();
+                $user->assignRole('donor');
+            }
+
             DB::table('donors')->insert([
                 'phoneNumber' => $phoneNumber,
                 'email' => $email,
@@ -327,7 +335,7 @@ class DonorController
 
         } catch (Exception $e) {
             DB::table('users')->where('users.phoneNumber', $phoneNumber)->delete();
-            return response()->json(['status' => 500, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
     }
 

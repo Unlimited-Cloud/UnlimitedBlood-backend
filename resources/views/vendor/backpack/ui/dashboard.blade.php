@@ -15,13 +15,14 @@
             'button_text' => trans('backpack::base.logout'),
         ];
     }
-    if (backpack_user()->roles->isEmpty()) {
+    if (backpack_user()->hasRole('unverified')) {
        Widget::add()
     ->to('after_content')
     ->type('alert')
     ->class('alert alert-danger mb-2')
     ->heading('Notice')
-    ->content('Please wait while we verify your account. It may take up to 24 hours.');
+    ->content("Please wait while we verify your account. It may take up to 24 hours.
+    \nIf you are creating a new organization, please register your organization first.");
     }
     if (backpack_user()->hasRole('donor')) {
          Widget::add()
@@ -29,7 +30,7 @@
     ->type('alert')
     ->class('alert alert-danger mb-2')
     ->heading('Notice')
-    ->content('Use the UnlimitedBlood app for more features like tracking blood pressure, sending blood requests, and more.
+    ->content('Use the UnlimitedBlood app for more features like tracking blood pressure, checking the leaderboard, and more.
     ');
     }
     if (backpack_user()->hasRole('admin')) {

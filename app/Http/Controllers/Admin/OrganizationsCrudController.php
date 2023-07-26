@@ -12,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Validation\Rules\ValidUploadMultiple;
 
 /**
  * Class OrganizationsCrudController
@@ -34,13 +35,17 @@ class OrganizationsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Organizations::class);
-        CRUD::setRoute(config('backpack.base.route_prefix').'/organizations');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/organizations');
         CRUD::setEntityNameStrings('organizations', 'organizations');
 
         if (backpack_user()->hasRole('donor') || backpack_user()->hasRole('organization')) {
             redirect()->route('backpack.dashboard')->send();
             $this->crud->denyAccess(['show', 'create', 'update', 'delete']);
+        } elseif (backpack_user()->hasRole('unverified')) {
+            $this->crud->denyAccess(['show', 'update', 'delete']);
+
         }
+
     }
 
 
@@ -52,13 +57,18 @@ class OrganizationsCrudController extends CrudController
      */
     protected function setupListOperation(): void
     {
+        if (backpack_user()->hasRole('unverified')) {
+            $this->crud->addClause('where', 'id', '=', backpack_user()->organizationId);
+        }
+        if (backpack_user()->organizationId != null) {
+            $this->crud->denyAccess(['create', 'delete']);
+        }
         CRUD::column('id')->label('ID')->type('number');
         CRUD::column('phoneNumber')->label('Mobile Number')->type('tel');
         CRUD::column('email')->type('email');
         CRUD::column('name');
         CRUD::column('address');
         CRUD::column('website')->type('url');
-        CRUD::column('loginStatus')->type('boolean');
         CRUD::column('logo');
 
         /**
@@ -87,10 +97,32 @@ class OrganizationsCrudController extends CrudController
      */
     protected function setupCreateOperation(): void
     {
-        CRUD::field('phoneNumber')->type('number');
+        $this->crud->setValidation([
+            'phoneNumber' => 'required',
+            'email' => 'required',
+            'name' => 'required',
+            'logo' => ValidUploadMultiple::field('max:1')
+                ->file('file|mimes:jpeg,png,jpg|max:2048'),
+            'address' => 'required',
+
+        ]);
+        CRUD::field('phoneNumber')->label('Organization Phone Number')->type('number');
         CRUD::field('email')->type('email');
-        CRUD::field('name');
-        CRUD::field('address');
+        CRUD::field('name')->label('Organization Name')->type('text');
+        CRUD::field('address')->type('text');
+        CRUD::addfield([
+            'name' => 'location',
+            'type' => 'google_map',
+            // optionals
+            'map_options' => [
+                'default_lat' => 123,
+                'default_lng' => 456,
+                'locate' => true, // when false, only a map is displayed. No value for submition.
+                'height' => 400 // in pixels
+            ]
+        ]);
+        CRUD::field('logo')->type('image');
+        CRUD::field('website')->type('url');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

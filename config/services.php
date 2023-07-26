@@ -13,8 +13,12 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'google_places' => [
+        'key' => 'AIzaSyBozYk5_cgJLRqv3jbmEH9are0b0gHVLlc'
+    ],
 
-    'mailgun' => [
+
+    /*'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
@@ -29,6 +33,6 @@ return [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-    ],
+    ],*/
 
 ];

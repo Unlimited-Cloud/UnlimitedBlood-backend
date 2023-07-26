@@ -39,7 +39,7 @@ class UserCrudController extends BaseUserCrudController
     public function setup(): void
     {
         CRUD::setModel(User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix').'/user');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
         CRUD::setEntityNameStrings('user', 'users');
 
         if (!backpack_user()->hasRole('admin')) {
@@ -151,8 +151,9 @@ class UserCrudController extends BaseUserCrudController
                             // the method that defines the relationship in your Model
                             'attribute' => 'name', // foreign key attribute that is shown to user
                             'model' => config('permission.models.role'), // foreign key model
-                            'pivot' => true, // on create&update, do you need to add/delete pivot table entries?]
+                            'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
                             'number_columns' => 3, //can be 1,2,3,4,6
+
                         ],
                         'secondary' => [
                             'label' => mb_ucfirst(trans('backpack::permissionmanager.permission_plural')),

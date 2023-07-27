@@ -84,7 +84,27 @@ class OrganizationsCrudController extends CrudController
      */
     protected function setupUpdateOperation(): void
     {
-        $this->setupCreateOperation();
+        $this->crud->setValidation([
+            'phoneNumber' => 'required|digits:10',
+            'email' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+
+        ]);
+        CRUD::field('phoneNumber')->label('Organization Phone Number')->type('number');
+        CRUD::field('email')->type('email');
+        CRUD::field('name')->label('Organization Name')->type('text');
+        CRUD::field('address')->type('text');
+        CRUD::addField([
+            'name' => 'logo',
+            'label' => 'Organization Logo',
+            'type' => 'base64_image',
+            'filename' => null,
+            'aspect_ratio' => 1, // set to 0 to allow any aspect ratio
+            'crop' => true, // set to true to allow cropping, false to disable
+            'src' => null,
+        ]);
+        CRUD::field('website')->type('url');
     }
 
     /**

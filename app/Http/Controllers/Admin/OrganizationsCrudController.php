@@ -129,7 +129,7 @@ class OrganizationsCrudController extends CrudController
         CRUD::field('latitude')->type('number');
         CRUD::field('longitude')->type('number');
         // TODO: fix google map field by fixing API
-        /*CRUD::addfield([
+        CRUD::addfield([
             'name' => 'address',
             'type' => 'google_map',
             // optionals
@@ -139,7 +139,7 @@ class OrganizationsCrudController extends CrudController
                 'locate' => true, // when false, only a map is displayed. No value for submission.
                 'height' => 400 // in pixels
             ]
-        ]);*/
+        ]);
         CRUD::addField([
             'name' => 'logo',
             'label' => 'Organization Logo',

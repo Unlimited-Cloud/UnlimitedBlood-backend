@@ -37,7 +37,7 @@ class OrganizersCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix').'/organizers');
         CRUD::setEntityNameStrings('organizer', 'organizers');
 
-        if (backpack_user()->hasRole('organization')) {
+        if (backpack_user()->hasRole('organizer')) {
             $this->crud->denyAccess(['update']);
         }
     }

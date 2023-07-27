@@ -53,7 +53,7 @@ class PermissionsSeeder extends Seeder
         $organizer->givePermissionTo('inventory-access');
         $organizer->givePermissionTo('organizers-access');
 
-        $unverified = Role::create(['name' => 'unverified_organizer']);
+        $unverified = Role::create(['name' => 'unverified']);
         $unverified->givePermissionTo('organizations-access');
 
         $user1 = User::factory()->create([

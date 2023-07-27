@@ -121,7 +121,7 @@ class OrganizationsCrudController extends CrudController
                 'height' => 400 // in pixels
             ]
         ]);
-        CRUD::field('logo')->type('image');
+        CRUD::field('logo')->type('base64_image');
         CRUD::field('website')->type('url');
 
         /**

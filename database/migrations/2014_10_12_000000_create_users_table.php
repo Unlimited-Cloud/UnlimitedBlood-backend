@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -20,7 +21,6 @@ return new class extends Migration {
             $table->decimal('longitude', 12, 8);
             $table->string('address');
             $table->string('website')->nullable();
-            $table->binary('logo')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -49,7 +49,6 @@ return new class extends Migration {
             $table->string('address');
             $table->string('gender');
             $table->date('birthDate');
-            $table->binary('profilePicture')->nullable();
             $table->boolean('diabetes')->default(false);
             $table->boolean('loginStatus')->default(false);
             $table->boolean('phoneVerified')->default(false);
@@ -76,7 +75,6 @@ return new class extends Migration {
             $table->dateTime('startDate');
             $table->dateTime('endDate');
             $table->integer('attendees')->nullable();
-            $table->binary('pictures')->nullable();
             $table->timestamps();
 
             $table->foreign('organizationId')->references('id')->on('organizations');
@@ -139,6 +137,10 @@ return new class extends Migration {
             $table->foreign('fulfilled_by')->references('id')->on('organizations');
 
         });
+        DB::statement("ALTER TABLE camps ADD pictures LONGBLOB NULL");
+        DB::statement("ALTER TABLE donors ADD profilePicture LONGBLOB NULL");
+        DB::statement("ALTER TABLE organizations ADD logo LONGBLOB NULL");
+
     }
 
     /**

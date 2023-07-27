@@ -37,7 +37,7 @@ class RequestsCrudController extends CrudController
     public function setup(): void
     {
         CRUD::setModel(Requests::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/requests');
+        CRUD::setRoute(config('backpack.base.route_prefix').'/requests');
         CRUD::setEntityNameStrings('requests', 'requests');
 
         if (backpack_user()->hasRole('organizer')) {
@@ -94,7 +94,7 @@ class RequestsCrudController extends CrudController
             'bloodGroup' => 'required',
             'address' => 'required',
             'quantity' => 'required|numeric|min:1',
-            'requestDate' => 'required|date',
+            'requestDate' => 'required',
             'needByDate' => 'required|after_or_equal:today',
 
         ]);
@@ -114,13 +114,18 @@ class RequestsCrudController extends CrudController
 
         CRUD::addField([
             'name' => 'requestDate',
-            'label' => 'Request Date',
-            'type' => 'datetime',
-            'value' => Carbon::now(),
+            'label' => 'Request Date and Time',
+            'type' => 'datetime_picker',
+            'datetime_picker_options' => [
+                'format' => 'YYYY-MM-DD HH:mm:ss',
+                'language' => 'en',
+            ],
+            'value' => Carbon::now($tz = 'Asia/Kathmandu'),
             'attributes' => [
                 'readonly' => 'readonly'
             ]
         ]);
+
         CRUD::addField([
             'name' => 'bloodGroup',
             'label' => 'Blood Group',
@@ -143,7 +148,15 @@ class RequestsCrudController extends CrudController
 
         ]);
         CRUD::field('quantity')->label('Quantity (ml)')->type('number');
-        CRUD::field('needByDate')->label('Need By Date')->type('datetime');
+        CRUD::addField([
+            'name' => 'needByDate',
+            'label' => 'Need By Date',
+            'type' => 'datetime_picker',
+            'datetime_picker_options' => [
+                'format' => 'YYYY-MM-DD HH:mm:ss',
+                'language' => 'en',
+            ],
+        ]);
         CRUD::field('address');
         if (backpack_user()->hasRole('admin')) {
             CRUD::field('fulfilled_by');

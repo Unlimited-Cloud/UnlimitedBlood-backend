@@ -12,7 +12,6 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Backpack\CRUD\app\Library\Validation\Rules\ValidUploadMultiple;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -70,19 +69,22 @@ class CampsCrudController extends CrudController
         }
 
         CRUD::column('name');
-        CRUD::addColumn([
-            'name' => 'organizationId',
-            'label' => 'Organization',
-            'model' => 'App\Models\Organizations',
-            'entity' => 'organization',
-            'attribute' => 'name',
+        if (backpack_user()->hasRole('admin')) {
+            CRUD::addColumn([
+                'name' => 'organizationId',
+                'label' => 'Organization',
+                'model' => 'App\Models\Organizations',
+                'entity' => 'organization',
+                'attribute' => 'name',
 
-        ]);
+            ]);
+        }
+
         CRUD::column('address');
         CRUD::column('startDate')->label('Start Date')->type('datetime');
         CRUD::column('endDate')->label('End Date')->type('datetime');
         CRUD::column('attendees');
-        CRUD::column('pictures')->type('image');
+        CRUD::column('pictures')->type('base64_image');
 
         if (backpack_user()->hasRole('admin')) {
 
@@ -120,8 +122,6 @@ class CampsCrudController extends CrudController
         $this->crud->setValidation([
             'startDate' => 'required',
             'endDate' => 'required',
-            'pictures' => ValidUploadMultiple::field('required|min:1|max:5')
-                ->file('file|mimes:jpeg,png,jpg|max:2048'),
             'address' => 'required',
             'name' => 'required',
         ]);
@@ -135,17 +135,38 @@ class CampsCrudController extends CrudController
             'default' => backpack_user()->organizationId,
 
         ]);
-        CRUD::field('name');
+        CRUD::field('name')->label("Camp Name");
         CRUD::field('address');
         # get startDate that's already in the database
-        CRUD::field('startDate')->type('date');
-        CRUD::field('endDate')->type('date');
-
-        CRUD::field('pictures')->type('upload_multiple')->withFiles([
-            'temporaryUrl' => true,
-            'temporaryUrlExpirationTime' => 43200
+        CRUD::addfield([
+            'name' => 'startDate',
+            'label' => 'Start Date and Time',
+            'type' => 'datetime_picker',
+            'datetime_picker_options' => [
+                'format' => 'YYYY-MM-DD HH:mm:ss',
+                'language' => 'en',
+            ],
         ]);
-        // create route to uploaded images
+        CRUD::addField([
+            'name' => 'endDate',
+            'label' => 'End Date and Time',
+            'type' => 'datetime_picker',
+            'datetime_picker_options' => [
+                'format' => 'YYYY-MM-DD HH:mm:ss',
+                'language' => 'en',
+            ],
+        ]);
+        CRUD::addfield([
+            'label' => "Poster",
+            'name' => "pictures",
+            'filename' => null, // set to null if not needed
+            'type' => 'base64_image',
+            'aspect_ratio' => 16 / 9, // set to 0 to allow any aspect ratio
+            'crop' => true, // set to true to allow cropping, false to disable
+            'src' => null, // null to read straight from DB, otherwise set to model accessor function
+        ]);
+        CRUD::field('latitude')->type('number');
+        CRUD::field('longitude')->type('number');
 
 
         /**

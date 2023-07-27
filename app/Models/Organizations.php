@@ -70,8 +70,8 @@ class Organizations extends Model
         return Attribute::make(
             get: function ($value, $attributes) {
                 return json_encode([
-                    'lat' => $attributes['lat'],
-                    'lng' => $attributes['lng'],
+                    'lat' => $attributes['latitude'],
+                    'lng' => $attributes['longitude'],
                 ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
             },
             set: function ($value) {

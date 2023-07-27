@@ -401,9 +401,8 @@ class DonorController
             // Fetch camps that haven't ended from the database
             $camps = DB::table('camps')
                 ->where('camps.endDate', '>=', now())
-                ->select('camps.id', 'camps.name', 'camps.address', 'camps.phoneNumber',
-                    'camps.email', 'camps.latitude', 'camps.longitude', 'camps.website',
-                    'camps.logo', 'camps.startDate', 'camps.endDate')
+                ->select('camps.id', 'camps.name', 'camps.address', 'camps.latitude',
+                    'camps.longitude', 'camps.pictures', 'camps.startDate', 'camps.endDate')
                 ->get();
 
             // calculate the distance from each camp and only return the ones that are within 50km
@@ -411,7 +410,7 @@ class DonorController
             foreach ($camps as $camp) {
                 $distance = $this->haversineDistance($lat, $lng, $camp->latitude, $camp->longitude);
                 $camp->distance = $distance; // Add the distance property to the camp object
-                if ($distance <= 50) {
+                if ($distance <= 500) {
                     $campsWithDistance[] = $camp;
                 }
             }
@@ -426,7 +425,6 @@ class DonorController
         } catch (Exception $e) {
             return response()->json(['error' => $e], 500);
         }
-
     }
 
 }

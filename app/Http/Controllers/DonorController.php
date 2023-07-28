@@ -400,9 +400,11 @@ class DonorController
         try {
             // Fetch camps that haven't ended from the database
             $camps = DB::table('camps')
+                ->join('organizations', 'camps.organizationId', '=', 'organizations.id')
                 ->where('camps.endDate', '>=', now())
                 ->select('camps.id', 'camps.name', 'camps.address', 'camps.latitude',
-                    'camps.longitude', 'camps.pictures', 'camps.startDate', 'camps.endDate')
+                    'camps.longitude', 'camps.pictures', 'camps.startDate', 'camps.endDate',
+                    'organizations.name as organizationName', 'organizations.phoneNumber as organizationPhoneNumber')
                 ->get();
 
             // calculate the distance from each camp and only return the ones that are within 50km

@@ -110,7 +110,7 @@ class DonationsCrudController extends CrudController
     protected function setupCreateOperation(): void
     {
         $this->crud->setValidation([
-            'phoneNumber' => 'required|numeric',
+            'phoneNumber' => 'required|numeric|digits:10|exists:donors,phoneNumber',
             'bloodGroup' => 'required',
             'bloodType' => 'required',
             'quantity' => 'required|numeric',

@@ -126,8 +126,8 @@ class OrganizationsCrudController extends CrudController
         CRUD::field('email')->type('email');
         CRUD::field('name')->label('Organization Name')->type('text');
         CRUD::field('address')->type('text');
-        CRUD::field('latitude')->type('number');
-        CRUD::field('longitude')->type('number');
+        CRUD::field('latitude')->type('text');
+        CRUD::field('longitude')->type('text');
         // TODO: fix google map field by fixing API
         /*CRUD::addfield([
             'name' => 'address',

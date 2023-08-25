@@ -103,7 +103,7 @@ class UserCrudController extends BaseUserCrudController
     public function setupCreateOperation(): void
     {
         $this->addUserFields();
-        $this->crud->setValidation(StoreRequest::class);
+        //$this->crud->setValidation(StoreRequest::class);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
